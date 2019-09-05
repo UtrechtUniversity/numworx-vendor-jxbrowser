@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
+import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
 /**
@@ -26,4 +27,7 @@ public interface SwingBrowser extends Closeable {
   
   void addRefreshListener(RefreshListener l);
   void removeRefreshListener(RefreshListener l);
+  
+  void addStatusListener(StatusListener l);
+  void removeStatusListener(StatusListener l);
 }

@@ -10,7 +10,6 @@ public class JFXFactory implements SwingBrowserFactory {
 
   @Override
   public SwingBrowser newBrowser() {
-    // TODO Auto-generated method stub
     return new JFXBrowser();
   }
 

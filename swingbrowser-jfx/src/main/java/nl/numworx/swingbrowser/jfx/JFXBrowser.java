@@ -13,6 +13,7 @@ import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.TitleEvent;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
+import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
 import javafx.application.Platform;
@@ -67,6 +68,7 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
   private WebEngine engine;
   private volatile TitleListener title;
   private volatile RefreshListener refresh;
+  private volatile StatusListener status;
 
   static {
     Platform.setImplicitExit(false);
@@ -189,6 +191,17 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
   public void removeRefreshListener(RefreshListener l) {
     refresh = null;
 
+  }
+
+  @Override
+  public void addStatusListener(StatusListener l) {
+    status = l;
+
+  }
+
+  @Override
+  public void removeStatusListener(StatusListener l) {
+    status = null;
   }
 
 }

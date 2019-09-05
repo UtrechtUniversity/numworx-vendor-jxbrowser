@@ -16,7 +16,8 @@
   		<artifactId>org.osgi.core</artifactId>
   		<version>6.0.0</version>
   		<scope>provided</scope>
-  	</dependency>
+  		<optional>true</optional>
+	  	</dependency>
 	
 	</dependencies>
 	<build>

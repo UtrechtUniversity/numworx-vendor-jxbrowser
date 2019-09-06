@@ -37,6 +37,8 @@ public class SwingBrowserProvider {
         }
         context.ungetService(reference); // wel of niet?
       }
+    } catch(NoClassDefFoundError noclass) {
+      // common case.
     } catch (Exception ignore) {
       LOG.log(Level.WARNING, "getFactory osgi", ignore);
     } catch (Error ignoretoo) {

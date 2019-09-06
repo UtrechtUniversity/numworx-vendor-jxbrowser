@@ -16,6 +16,7 @@
 	<modules>
 		<module>swingbrowser-api</module>
 		<module>swingbrowser-jfx</module>
+		<module>swingbrowser-jxb</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>

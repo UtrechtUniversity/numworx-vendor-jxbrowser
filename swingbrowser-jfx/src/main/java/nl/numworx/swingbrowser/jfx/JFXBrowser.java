@@ -9,8 +9,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import nl.numworx.swingbrowser.api.RefreshEvent;
+import nl.numworx.swingbrowser.api.StatusEvent;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.TitleEvent;
+import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
@@ -23,7 +25,11 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.scene.web.WebEvent;
 
+import javafx.event.EventHandler;
+import netscape.javascript.JSException;
+import netscape.javascript.JSObject;
 
 @SuppressWarnings({"restriction", "serial"})
 class JFXBrowser extends JFXPanel implements SwingBrowser {
@@ -64,12 +70,28 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
         }
     }
   }
- 
+  
+  final class StatusHandler implements EventHandler<WebEvent<String>> {
+    @Override
+    public void handle(final WebEvent<String> event) {
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          String msg = event.getData();
+          StatusListener l = status;
+          if (l != null)
+            l.onStatus(new StatusEvent(JFXBrowser.this, msg));
+        }
+      });
+    }
+  }
+
   private WebEngine engine;
   private volatile TitleListener title;
   private volatile RefreshListener refresh;
   private volatile StatusListener status;
-
+  private final Console stub = new Console(this);
+  private final API api = new API();
   static {
     Platform.setImplicitExit(false);
   }
@@ -85,6 +107,23 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
       l.onRefresh(new RefreshEvent(this));
     }
 
+    void install() {
+      JSObject window;
+      window = (JSObject) engine.executeScript("window");
+      window.setMember("console", stub);
+      window.setMember("API", api);
+      window.setMember("API_1484_11", api);
+    }
+
+    private void removeMembers0() {
+      JSObject window;
+      window = (JSObject) engine.executeScript("window");
+      try { window.removeMember("console"); } catch (JSException e) {}
+      try { window.removeMember("API"); } catch (JSException e) {}
+      try { window.removeMember("API_1484_11"); } catch (JSException e) {}
+    }
+
+
   private void createScene() {
 
     Platform.runLater(new Runnable() {
@@ -94,20 +133,10 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
 
             WebView view = new WebView();
             engine = view.getEngine();
+            install();
 
             engine.titleProperty().addListener(new TitleHandler());
-
-//          engine.setOnStatusChanged(new EventHandler<WebEvent<String>>() {
-//              @Override
-//              public void handle(final WebEvent<String> event) {
-//                  SwingUtilities.invokeLater(new Runnable() {
-//                      @Override
-//                      public void run() {
-//                          lblStatus.setText(event.getData());
-//                      }
-//                  });
-//              }
-//          });
+            engine.setOnStatusChanged(new StatusHandler());
 
 //          engine.locationProperty().addListener(new ChangeListener<String>() {
 //              @Override
@@ -116,19 +145,6 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
 //                      @Override
 //                      public void run() {
 //                          txtURL.setText(newValue);
-//                      }
-//                  });
-//              }
-//          });
-
-//          engine.getLoadWorker().workDoneProperty().addListener(new ChangeListener<Number>() {
-//              @Override
-//              public void changed(ObservableValue<? extends Number> observableValue, Number oldValue,
-//                      final Number newValue) {
-//                  SwingUtilities.invokeLater(new Runnable() {
-//                      @Override
-//                      public void run() {
-//                          progressBar.setValue(newValue.intValue());
 //                      }
 //                  });
 //              }
@@ -146,6 +162,10 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
   @Override
   public void close() throws IOException {
     loadURL("about:blank");
+    if ( Platform.isFxApplicationThread() )
+      removeMembers0();
+    else
+      Platform.runLater(()-> { removeMembers0(); });
   }
 
   @Override
@@ -167,8 +187,7 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
 
   @Override
   public void setAPI(SCORM2004APIInterface api) {
-    // TODO Auto-generated method stub
-
+    this.api.delegate = api;
   }
 
   @Override
@@ -184,24 +203,31 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
   @Override
   public void addRefreshListener(RefreshListener l) {
     refresh = l;
-
   }
 
   @Override
   public void removeRefreshListener(RefreshListener l) {
     refresh = null;
-
   }
 
   @Override
   public void addStatusListener(StatusListener l) {
     status = l;
-
   }
 
   @Override
   public void removeStatusListener(StatusListener l) {
     status = null;
+  }
+
+  @Override
+  public void addConsoleListener(ConsoleListener l) {
+    stub.delegate = null;
+  }
+
+  @Override
+  public void removeConsoleListener(ConsoleListener l) {
+    stub.delegate = l;
   }
 
 }

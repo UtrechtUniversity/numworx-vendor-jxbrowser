@@ -7,6 +7,7 @@ import java.io.Closeable;
 
 import javax.swing.JComponent;
 
+import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
@@ -30,4 +31,7 @@ public interface SwingBrowser extends Closeable {
   
   void addStatusListener(StatusListener l);
   void removeStatusListener(StatusListener l);
+  
+  void addConsoleListener(ConsoleListener l);
+  void removeConsoleListener(ConsoleListener l);
 }

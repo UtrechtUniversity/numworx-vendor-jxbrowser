@@ -44,6 +44,6 @@ public class SwingBrowserProvider {
     } catch (Error ignoretoo) {
       LOG.log(Level.WARNING, "getFactory osgi", ignoretoo);
     }
-    return this.factory = ServiceLoader.load(SwingBrowserFactory.class).iterator().next();
+    return this.factory = ServiceLoader.load(SwingBrowserFactory.class, getClass().getClassLoader()).iterator().next();
   }
 }

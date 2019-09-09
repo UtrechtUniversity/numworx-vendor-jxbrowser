@@ -21,6 +21,7 @@
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 	    	<groupId>com.teamdev.jxbrowser</groupId>
@@ -49,9 +50,11 @@
 				<configuration>
 					<instructions>
 						<Bundle-Activator>nl.numworx.swingbrowser.jxb.Activator</Bundle-Activator>
-						<Export-Package>!nl.numworx.swingbrowser.jxb</Export-Package>
-						<Private-Package>nl.numworx.swingbrowser.jxb</Private-Package>
-						<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,1.1)",*</Import-Package>
+						<Export-Package>!*</Export-Package>
+						<Private-Package>nl.numworx.swingbrowser.jxb,com.teamdev.jxbrowser.*,7.2</Private-Package>
+						<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,1.1)",sun.awt.*;resolution:=optional,*</Import-Package>
+						<Embed-Transitive>true</Embed-Transitive>
+	  					<Embed-Dependency>*;scope=compile;type=!pom;inline=true</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>

@@ -9,12 +9,12 @@ import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 
 public class Activator implements BundleActivator {
 
-  private JXBFactory factory;
+  private ProviderFactory factory;
 
   @Override
   public void start(BundleContext context) throws Exception {
-    factory = new JXBFactory();
-    context.registerService(SwingBrowserFactory.class, factory, new Hashtable<String,Object>());
+    factory = new ProviderFactory();
+    context.registerService(SwingBrowserFactory.class.getName(), factory, new Hashtable<String,Object>());
   }
 
   @Override

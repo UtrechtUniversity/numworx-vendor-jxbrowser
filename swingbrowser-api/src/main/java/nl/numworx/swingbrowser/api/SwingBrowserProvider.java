@@ -25,7 +25,10 @@ public class SwingBrowserProvider {
     try {
       Bundle bundle = FrameworkUtil.getBundle(getClass());
       if (bundle != null) {
-        BundleContext context = bundle.getBundleContext();
+        if (bundle.getState() != Bundle.ACTIVE)
+          bundle.start();
+        BundleContext context = bundle.getBundleContext(); // context null: not started yet.
+        
         ServiceReference<SwingBrowserFactory> reference =
             context.getServiceReference(SwingBrowserFactory.class);
         if (reference == null) throw new NoSuchElementException("Not found in OSGI");

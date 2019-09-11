@@ -103,6 +103,11 @@ public class JXBrowser implements SwingBrowser {
     browser.set(InjectJsCallback.class, params -> InjectJsCallback.Response.proceed());
     browser.close();
   }
+  
+  @Override
+  protected void finalize() throws Throwable {
+    close();
+  }
 
   @Override
   public JComponent asComponent() {

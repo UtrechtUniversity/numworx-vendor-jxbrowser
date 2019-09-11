@@ -13,7 +13,10 @@ import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 public class JXBFactory implements SwingBrowserFactory {
 
   public JXBFactory() {
-    EngineOptions options = EngineOptions.newBuilder(RenderingMode.HARDWARE_ACCELERATED)
+
+    //System.setProperty("jxbrowser.license.key", "1BNDHFSC1FSXE8ZQ3CGF91WIOWKO39P18F6JHR1D9G9NYT5IPV0ZEJAIRCA8F5K1040G6S");
+
+    EngineOptions options = EngineOptions.newBuilder(RenderingMode.OFF_SCREEN)
         .licenseKey("1BNDHFSC1FSXE8ZQ3CGF91WIOWKO39P18F6JHR1D9G9NYT5IPV0ZEJAIRCA8F5K1040G6S")
         .language(Language.of(JComponent.getDefaultLocale()).orElse(Language.ENGLISH_US)) // Language.of(Locale)
         .build();

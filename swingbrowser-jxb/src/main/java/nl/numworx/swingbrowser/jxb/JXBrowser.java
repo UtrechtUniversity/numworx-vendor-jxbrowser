@@ -43,6 +43,7 @@ public class JXBrowser implements SwingBrowser {
     this.jxb = jxb;
     browser = jxb.engine.newBrowser();
     browserView = BrowserView.newInstance(browser);
+    browser.settings().enableTransparentBackground();
     browser.on(TitleChanged.class, this::onTitle);
     browser.on(StatusChanged.class, this::onStatus);
     browser.on(ConsoleMessageReceived.class, this::onMessage);

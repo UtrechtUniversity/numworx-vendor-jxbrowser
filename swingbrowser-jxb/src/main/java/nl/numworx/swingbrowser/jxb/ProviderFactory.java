@@ -22,7 +22,6 @@ public class ProviderFactory implements ServiceFactory<JXBFactory> {
   }
 
   public void close() {
-    // TODO Auto-generated method stub
   }
 
 }

@@ -38,4 +38,9 @@ public class JXBFactory implements SwingBrowserFactory {
     engine.close();
   }
 
+  @Override
+  protected void finalize() throws Throwable {
+    close();
+  }
+
 }

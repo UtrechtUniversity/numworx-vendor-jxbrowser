@@ -2,6 +2,7 @@ package nl.numworx.swingbrowser.api;
 
 import java.util.EventObject;
 
+@SuppressWarnings("serial")
 public class ConsoleEvent extends EventObject {
 
   public enum Level { LOG, ERROR, WARN, INFO, DEBUG };

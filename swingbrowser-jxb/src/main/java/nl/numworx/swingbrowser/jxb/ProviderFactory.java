@@ -11,7 +11,7 @@ public class ProviderFactory implements ServiceFactory<JXBFactory> {
 
   @Override
   public JXBFactory getService(Bundle bundle, ServiceRegistration<JXBFactory> registration) {
-    JXBFactory f = new JXBFactory();
+    JXBFactory f = new PooledJXBFactory();
     return f;
   }
 

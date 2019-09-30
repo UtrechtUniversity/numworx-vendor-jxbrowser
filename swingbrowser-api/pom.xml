@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>swingbrowser-api</artifactId>
 	<packaging>bundle</packaging>
-	<name>API</name>
+	<name>Swingbrower API</name>
 	<dependencies>
 	  	<dependency>
   		<groupId>org.osgi</groupId>

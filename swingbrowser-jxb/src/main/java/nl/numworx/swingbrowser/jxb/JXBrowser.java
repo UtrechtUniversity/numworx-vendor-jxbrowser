@@ -36,8 +36,8 @@ public class JXBrowser implements SwingBrowser {
   private final JXBFactory jxb;
   private API stub;
 
-  private Browser browser;
-  private BrowserView browserView;
+  Browser browser;
+  BrowserView browserView;
  
   public JXBrowser(JXBFactory jxb) {
     this.jxb = jxb;
@@ -112,6 +112,8 @@ public class JXBrowser implements SwingBrowser {
 
   @Override
   public JComponent asComponent() {
+    if (browserView == null) 
+      browserView = BrowserView.newInstance(browser);
     return browserView;
   }
 
@@ -176,4 +178,7 @@ public class JXBrowser implements SwingBrowser {
 
   }
 
+  boolean isClosed() {
+    return browser.isClosed();
+  }
 }

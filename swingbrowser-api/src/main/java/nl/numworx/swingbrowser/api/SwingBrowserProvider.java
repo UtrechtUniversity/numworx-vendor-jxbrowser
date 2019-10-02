@@ -1,5 +1,6 @@
 package nl.numworx.swingbrowser.api;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
@@ -35,7 +36,7 @@ public class SwingBrowserProvider {
 
         SwingBrowserFactory factory = context.getService(reference);
         if (factory != null) {
-          // context.ungetService(reference); // wel of niet?
+          // context.ungetService(reference); // wel of niet? Niet want anders doet OSGI een close()
           return this.factory = factory;
         }
         context.ungetService(reference); // wel of niet?
@@ -47,6 +48,17 @@ public class SwingBrowserProvider {
     } catch (Error ignoretoo) {
       LOG.log(Level.WARNING, "getFactory osgi", ignoretoo);
     }
-    return this.factory = ServiceLoader.load(SwingBrowserFactory.class, getClass().getClassLoader()).iterator().next();
+    ServiceLoader<SwingBrowserFactory> loader = ServiceLoader.load(SwingBrowserFactory.class, getClass().getClassLoader());
+    Iterator<SwingBrowserFactory> it = loader.iterator();
+    while (it.hasNext()) {
+      try {
+        this.factory = it.next();
+        break;
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "serviceloader SwingBrowserFactory", e);
+      }
+    }
+    if (this.factory == null) throw new NoSuchElementException("Not found");
+    return this.factory;
   }
 }

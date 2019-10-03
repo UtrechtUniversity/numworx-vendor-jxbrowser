@@ -49,4 +49,7 @@
 		<url>https://www.numworx.nl</url>
 	</organization>
 	<inceptionYear>2019</inceptionYear>
+	<scm>
+		<developerConnection>scm:git:git@git.science.uu.nl:dwoproject/application/swingbrowser.git</developerConnection>
+	</scm>
 </project>

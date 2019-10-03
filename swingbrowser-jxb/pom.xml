@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.swingbrowser</groupId>
     <artifactId>swingbrowser-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>swingbrowser-jxb</artifactId>
   <packaging>bundle</packaging>
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 	    	<groupId>com.teamdev.jxbrowser</groupId>

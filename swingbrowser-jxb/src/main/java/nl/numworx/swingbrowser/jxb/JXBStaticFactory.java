@@ -1,5 +1,7 @@
 package nl.numworx.swingbrowser.jxb;
 
+import java.util.NoSuchElementException;
+
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 
@@ -19,5 +21,7 @@ public class JXBStaticFactory implements SwingBrowserFactory {
       return factory.newBrowser();
     }
     
-  
+    public JXBStaticFactory() throws NoSuchElementException, ClassNotFoundException {
+          Class.forName("com.teamdev.jxbrowser.engine.Engine");
+    }
 }

@@ -54,7 +54,7 @@ public class SwingBrowserProvider {
       try {
         this.factory = it.next();
         break;
-      } catch (Exception e) {
+      } catch (Throwable e) {
         LOG.log(Level.WARNING, "serviceloader SwingBrowserFactory", e);
       }
     }

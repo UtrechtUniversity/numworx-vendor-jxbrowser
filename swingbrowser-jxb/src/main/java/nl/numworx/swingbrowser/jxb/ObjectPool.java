@@ -52,7 +52,7 @@ public abstract class ObjectPool<T>
                 } else if (size > maxIdle) {
                     int sizeToBeRemoved = size - maxIdle;
                     for (int i = 0; i < sizeToBeRemoved; i++) {
-                        pool.poll();
+                        disposeObject(pool.poll());
                     }
                 }
             }
@@ -74,6 +74,10 @@ public abstract class ObjectPool<T>
         return object;
     }
  
+    protected void disposeObject(T object) {
+      
+    }
+    
     /**
      * Returns object back to the pool.
      *

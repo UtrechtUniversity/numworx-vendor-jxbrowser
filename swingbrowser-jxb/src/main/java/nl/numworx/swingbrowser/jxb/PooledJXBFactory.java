@@ -2,13 +2,12 @@ package nl.numworx.swingbrowser.jxb;
 
 import java.awt.Container;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
+import javax.swing.SwingWorker;
 
 import com.teamdev.jxbrowser.frame.Frame;
-import com.teamdev.jxbrowser.frame.LoadDataParams;
-import com.teamdev.jxbrowser.net.MimeType;
-
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
@@ -19,7 +18,7 @@ import nl.numworx.swingbrowser.scorm.TitleListener;
 
 public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory {
 
-  ObjectPool<SwingBrowser> pool;
+  ObjectPool<SwingBrowserWrap> pool;
   
   class SwingBrowserWrap implements SwingBrowser {
     final JXBrowser delegate;
@@ -39,15 +38,41 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
     public void close() throws IOException {
       if (!delegate.isClosed())
       { 
-        setAPI(null);
-        removeConsoleListener(null);
-        removeRefreshListener(null);
-        removeStatusListener(null);
-        removeTitleListener(null);
-        delegate.browser.navigation().loadUrlAndWait("about:blank");
-        Container p = asComponent().getParent(); if (p != null) p.remove(asComponent()); else asComponent().invalidate();
-        delegate.browserView = null;
-        pool.returnObject(this);
+        new SwingWorker<SwingBrowserWrap,Void>() {
+
+          @Override
+          protected SwingBrowserWrap doInBackground() throws Exception {
+            setAPI(null);
+            removeConsoleListener(null);
+            removeRefreshListener(null);
+            removeStatusListener(null);
+            removeTitleListener(null);
+            delegate.browser.navigation().loadUrlAndWait("about:blank");
+           return SwingBrowserWrap.this;
+          }
+
+          @Override
+          protected void done() {
+              try {
+                get();
+                if (delegate.browserView != null) {
+                  Container p = asComponent().getParent(); 
+                  if (p != null) p.remove(asComponent()); else asComponent().invalidate();
+                  delegate.browserView = null;
+                }
+            } catch (Exception e) {
+                try {
+                  delegate.close();
+                } catch (IOException e1) {
+                }
+                return;
+              }
+              pool.returnObject(SwingBrowserWrap.this);
+
+          }
+          
+        }.execute();
+        
       }
     }
 
@@ -102,12 +127,21 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
   }
   
   PooledJXBFactory() {
-    pool = new ObjectPool<SwingBrowser>(0) {
+    pool = new ObjectPool<SwingBrowserWrap>(1) {
       
       @Override
-      protected SwingBrowser createObject() {
+      protected SwingBrowserWrap createObject() {
         return new SwingBrowserWrap(new JXBrowser(PooledJXBFactory.this));
       }
+
+      @Override
+      protected void disposeObject(SwingBrowserWrap object) {
+        try {
+          object.delegate.close();
+        } catch (IOException e) {
+        }
+      }
+      
     };
   }
 

@@ -5,7 +5,8 @@ import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 
 public class JFXFactory implements SwingBrowserFactory {
 
-  public JFXFactory() {
+  public JFXFactory() throws ClassNotFoundException {
+    Class.forName("javafx.scene.web.WebView");
   }
 
   @Override

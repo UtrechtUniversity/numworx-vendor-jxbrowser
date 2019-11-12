@@ -11,6 +11,10 @@ public class JXBStaticFactory implements SwingBrowserFactory {
 
     @Override
     public SwingBrowser newBrowser() {
+      return instance().newBrowser();
+    }
+
+    private JXBFactory instance() {
       if (factory == null) {
         synchronized(getClass()) {
           if (factory == null) {
@@ -18,10 +22,15 @@ public class JXBStaticFactory implements SwingBrowserFactory {
           }
         }
       }
-      return factory.newBrowser();
+      return factory;
     }
     
     public JXBStaticFactory() throws NoSuchElementException, ClassNotFoundException {
           Class.forName("com.teamdev.jxbrowser.engine.Engine");
+    }
+
+    @Override
+    public void newSession() {
+      instance().newSession();     
     }
 }

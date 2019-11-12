@@ -19,14 +19,12 @@ public final class API {
   }
   
   public String GetValue(String arg) {
-    System.out.println("get value of " + arg);
     if (delegate != null) 
       return delegate.GetValue(arg);
     return "";
   }
 
   public String SetValue(String key, String value) {
-    System.out.println("set value for " + key);
     if (delegate != null) 
       return delegate.SetValue(key, value);
     return "true";
@@ -39,16 +37,24 @@ public final class API {
   }
 
   public String Commit(String arg) {
-    System.out.println("Commit");
     if (delegate != null)
       return delegate.Commit(arg);
     return "true";
   }
  
   public String Terminate(String arg) {
-    System.out.println("Terminate");
     if (delegate != null)
       return delegate.Terminate(arg);
     return "true";
   }
+  
+  public String LMSFinish(String arg) {
+    return Terminate(arg);
+  }
+  
+  public String LMSSetValue(String key, String value) {
+    return SetValue(key, value);
+  }
+  
 }
+

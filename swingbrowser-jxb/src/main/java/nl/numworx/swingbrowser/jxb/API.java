@@ -35,6 +35,12 @@ public final class API {
       return delegate.SetValue(key, value);
     return "true";
   }
+  
+  @JsAccessible
+  public String LMSSetValue(String key, String value) {
+    return SetValue(key, value);
+  }
+  
 
   @JsAccessible
   public String GetLastError() {
@@ -54,5 +60,10 @@ public final class API {
     if (delegate != null)
       return delegate.Terminate(arg);
     return "true";
+  }
+  
+  @JsAccessible
+  public String LMSFinish(String arg) {
+    return Terminate(arg);
   }
 }

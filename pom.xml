@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>nl.numworx.swingbrowser</groupId>
 	<artifactId>swingbrowser-parent</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SwingBrowser Multi module</name>
 	<modules>
@@ -57,7 +57,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-api</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
+				<version>0.0.3-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

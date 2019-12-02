@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>nl.numworx.swingbrowser</groupId>
 	<artifactId>swingbrowser-parent</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>pom</packaging>
 	<name>SwingBrowser Multi module</name>
 	<modules>
@@ -21,6 +21,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 	</properties>
 	<build>
 		<plugins>
@@ -50,4 +52,13 @@
 	<scm>
 		<developerConnection>scm:git:git@git.science.uu.nl:dwoproject/application/swingbrowser.git</developerConnection>
 	</scm>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>nl.numworx.swingbrowser</groupId>
+				<artifactId>swingbrowser-api</artifactId>
+				<version>0.0.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

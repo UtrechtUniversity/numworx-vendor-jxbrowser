@@ -21,10 +21,14 @@ import nl.numworx.swingbrowser.scorm.TitleListener;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 import javafx.scene.web.WebEvent;
 
 import javafx.event.EventHandler;
@@ -152,12 +156,58 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
 
             engine.getLoadWorker().exceptionProperty().addListener(new ExceptionHandler());
 
-            setScene(new Scene(view));
+            engine.getLoadWorker().
+            stateProperty().
+            addListener(new ChangeListener<State>() {
+
+                @Override
+                public void changed(
+                        ObservableValue<? extends State> ov,
+                        State oldState, State newState) {
+                    
+                    if (newState == State.RUNNING || newState == State.SUCCEEDED)
+                    {   
+                        install();
+                    }
+                }
+            }
+         );
+
+            engine.setOnAlert(new EventHandler<WebEvent<String>>() {
+              
+              @Override
+              public void handle(final WebEvent<String> message) {
+                  showAlert(message.getData());
+              }
+          });
+          
+          engine.setConfirmHandler(new Callback<String, Boolean>() {
+              
+              @Override
+              public Boolean call(String message) {
+                  return showConfirm(message);
+              }
+          });
+          setScene(new Scene(view));
         }
     });
 }
 
-  
+  private void showAlert(String message) {
+    Dialog<Void> alert = new Dialog<>();
+    alert.getDialogPane().setContentText(message);
+    alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+    alert.showAndWait();
+  }
+
+  private boolean showConfirm(String message) {
+    Dialog<ButtonType> confirm = new Dialog<>();
+    confirm.getDialogPane().setContentText(message);
+    confirm.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+    boolean result = confirm.showAndWait().filter(ButtonType.YES::equals).isPresent();
+    return result ;
+  }
+
   
   @Override
   public void close() throws IOException {

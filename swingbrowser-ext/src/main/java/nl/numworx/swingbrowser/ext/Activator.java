@@ -29,4 +29,9 @@ public class Activator implements BundleActivator, SwingBrowserFactory {
     return preview;
   }
 
+  @Override
+  public void newSession() {
+    // nog uitzoeken.    
+  }
+
 }

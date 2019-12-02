@@ -43,4 +43,9 @@ public class JXBFactory implements SwingBrowserFactory {
     close();
   }
 
+  @Override
+  public void newSession() {
+    engine.cookieStore().deleteAll();
+  }
+
 }

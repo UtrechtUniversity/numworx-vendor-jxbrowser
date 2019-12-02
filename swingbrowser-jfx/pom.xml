@@ -3,7 +3,8 @@
 	<parent>
 		<groupId>nl.numworx.swingbrowser</groupId>
 		<artifactId>swingbrowser-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.2</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>swingbrowser-jfx</artifactId>
 	<packaging>bundle</packaging>
@@ -19,7 +20,6 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -30,10 +30,11 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<_snapshot>${osgi.qualifier}</_snapshot>
 						<Bundle-Activator>nl.numworx.swingbrowser.jfx.Activator</Bundle-Activator>
 						<Export-Package>!nl.numworx.swingbrowser.jfx</Export-Package>
 						<Private-Package>nl.numworx.swingbrowser.jfx</Private-Package>
-						<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,1.1)",*</Import-Package>
+						<Import-Package>nl.numworx.swingbrowser.api;provide:=true,*</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

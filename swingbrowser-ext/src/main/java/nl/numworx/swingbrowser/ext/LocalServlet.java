@@ -1,15 +1,21 @@
 package nl.numworx.swingbrowser.ext;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 
@@ -25,6 +31,7 @@ public class LocalServlet extends HttpServlet {
 		this.api = api2;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = req.getRequestURI();
@@ -40,23 +47,18 @@ public class LocalServlet extends HttpServlet {
 			resp.setContentType("text/javascript");
 			resp.setCharacterEncoding("UTF-8");
 			PrintWriter w = resp.getWriter();
+			
 			w.println("/* SCORM */");
-			w.println("scorm = {");
+			w.println("scorm = ");
+			JSONObject scorm = new JSONObject();
+			scorm.put("dme.abo_type", "premium");
 			if (api != null) {
 				String ld = api.GetValue("cmi.launch_data");
 				if (ld != null && ! ld.isEmpty()) {
-					w.println("\"cmi.launch_data\" :");
-					w.print("  ");
-					w.println(ld);
-					w.println(","); // ???
+					scorm.put("cmi.launch_data", ld);
 				}
-				w.println("\"dme.abo_type\":\"premium\",");
-
-				
-			} else {
-				w.println("\"dme.abo_type\":\"premium\",");
 			}
-			w.println("}");
+			scorm.writeJSONString(w);
 			return;
 		}
 		
@@ -82,6 +84,24 @@ public class LocalServlet extends HttpServlet {
 			log("init", e);
 			throw new ServletException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			BufferedReader in = req.getReader();
+			String tail = req.getPathInfo();
+			try {
+				Map<String,String> object = (Map<String, String>) new JSONParser().parse(in);
+				object.forEach(api::SetValue);
+			} catch (ParseException e) {
+				log("Parser", e);
+			}				
+			resp.sendError(HttpServletResponse.SC_NO_CONTENT);
+			
+			if ("/Commit".equals(tail))
+				api.Commit("");
+			else if ("/Terminate".equals(tail))
+				api.Terminate("");
 	}
 
 }

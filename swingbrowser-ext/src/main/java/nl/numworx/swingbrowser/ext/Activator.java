@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
@@ -14,7 +15,10 @@ public class Activator implements BundleActivator, SwingBrowserFactory {
   @Override
   public void start(BundleContext context) throws Exception {
     this.context = context;
-    context.registerService(SwingBrowserFactory.class, this, new Hashtable<>());
+    Hashtable<String, Object> properties = new Hashtable<>();
+    properties.put("nl.numworx.swingbrowser.type", "ext");
+	properties.put(Constants.SERVICE_RANKING, -100);
+	context.registerService(SwingBrowserFactory.class, this, properties);
   }
 
   @Override

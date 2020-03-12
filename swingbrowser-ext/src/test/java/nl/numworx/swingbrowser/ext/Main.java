@@ -1,5 +1,7 @@
 package nl.numworx.swingbrowser.ext;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -16,7 +18,7 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 
 public class Main {
 
-  public static class API implements SCORM2004APIInterface {
+  public static class API implements SCORM2004APIInterface, PropertyChangeListener {
 
 		@Override
 		public String Initialize(String dummy) {
@@ -61,12 +63,19 @@ public class Main {
 			return "no error";
 		}
 
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if ("Terminate".equals(evt.getPropertyName()))
+				Terminate((String) evt.getOldValue());
+			else if (evt.getNewValue() instanceof String)
+				SetValue(evt.getPropertyName(), (String) evt.getNewValue());			
+		}
+
 	}
 
 public static void main(String[] args) throws Exception {
 	FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
     Map<String, String> map = new HashMap<>();
-    //map.put(PojoServiceRegistryFactory.BUNDLE_DESCRIPTORS, new ClasspathScanner().scanForBundles());
     System.setProperty("org.osgi.service.http.port", "8686");
     Framework framework = factory.newFramework(map);
     framework.init();
@@ -77,10 +86,13 @@ public static void main(String[] args) throws Exception {
     ServiceReference<SwingBrowserFactory> ref = framework.getBundleContext().getServiceReference(SwingBrowserFactory.class);
     SwingBrowserFactory fac = framework.getBundleContext().getService(ref);
     SwingBrowser applet = fac.newBrowser();
-    SCORM2004APIInterface api = new API();
+    API api = new API();
 	applet.setAPI(api);
     frame.setContentPane(applet.asComponent());
     applet.loadURL("https://app.dwo.nl/dwo/apps/player.html#641855");
+    //applet.loadURL("https://numworx.uu.nl/dwo/saml/login.jsp?r=8686"); // moet naar "_top" red
+    //applet.asComponent().setName("Please login");
+    applet.asComponent().addPropertyChangeListener(api);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();
     frame.show();

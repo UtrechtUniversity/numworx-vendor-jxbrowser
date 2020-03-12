@@ -3,10 +3,13 @@ package nl.numworx.swingbrowser.ext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -31,8 +34,20 @@ public class PreviewServlet extends HttpServlet {
 			rel += "?" + query;
 		URL url = new URL(base.toURL(), rel);		
 		URLConnection connection = url.openConnection();
-		String type = connection.getContentType();
-		resp.setContentType(type);
+		HttpURLConnection http = (HttpURLConnection) connection;
+		http.setInstanceFollowRedirects(false);
+		int code = http.getResponseCode();
+		if (code != 200) {
+			resp.sendError(code, http.getResponseMessage());
+			Map<String, List<String>> m = http.getHeaderFields();
+			m.forEach( (k,v) -> {
+				if (k != null)
+					v.forEach(vv -> resp.setHeader(k, vv));
+			});
+		} else {
+			String type = connection.getContentType();
+			resp.setContentType(type);
+		}
 		byte[] buffer = new byte[4096];
 		InputStream in = connection.getInputStream();
 		ServletOutputStream out = resp.getOutputStream();

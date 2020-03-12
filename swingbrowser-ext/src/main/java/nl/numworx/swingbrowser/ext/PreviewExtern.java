@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Dictionary;
 import java.util.Hashtable;
-
 import javax.servlet.ServletException;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -45,25 +44,43 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
     private SCORM2004APIInterface api;
 		
 	public String Initialize(String dummy) {
-    return api.Initialize(dummy);
+		if (api != null)
+			return api.Initialize(dummy);
+		return "true";
   }
 
+	Hashtable<String, String> cmi = new Hashtable<>();
+	
+	void fire(String key, String value) {
+		String old = cmi.put(key, value);
+		firePropertyChange(key, old, value);
+	}
+	
   public String Commit(String dummy) {
-    return api.Commit(dummy);
+	    if (api != null) 
+	    	return api.Commit(dummy);
+		firePropertyChange("Commit", dummy, null);
+	    return "true";
   }
 
   public String Terminate(String dummy) {
-    return api.Terminate(dummy);
+	  if (api != null)
+		return api.Terminate(dummy);
+	  firePropertyChange("Terminate", dummy, null);
+	  return "true";
   }
 
   public String GetValue(String key) {
     if (api != null)
       return api.GetValue(key);
-    return "";
+    return cmi.getOrDefault(key, "");
   }
 
   public String SetValue(String key, String value) {
-    return api.SetValue(key, value);
+	if (api != null)
+		return api.SetValue(key, value);
+	fire(key, value);
+	return "true";
   }
 
   public String GetLastError() {
@@ -106,7 +123,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		        initService(tracker.getService());
 		    	String action = e.getActionCommand();
 				String path = getPath(action);
-		    	path = "/local/";
+		    	if (api != null) path = "/local/";
 				Desktop.getDesktop().browse(URI.create("http://127.0.0.1:" + port + path));
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -219,5 +236,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
   @Override
   public void removeConsoleListener(ConsoleListener l) {
   }
+
+	@Override
+	public void setName(String name) {
+		btn.setText(name);
+	}
 
 }

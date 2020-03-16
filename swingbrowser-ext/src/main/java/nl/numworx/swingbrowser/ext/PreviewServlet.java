@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,12 @@ public class PreviewServlet extends HttpServlet {
 		http.setInstanceFollowRedirects(false);
 		int code = http.getResponseCode();
 		if (code != 200) {
-			resp.sendError(code, http.getResponseMessage());
+			if (code == 302) {
+				resp.sendRedirect(http.getHeaderField("Location"));
+				return;
+			} else
+				resp.sendError(code, http.getResponseMessage());
+		
 			Map<String, List<String>> m = http.getHeaderFields();
 			m.forEach( (k,v) -> {
 				if (k != null)
@@ -59,8 +65,13 @@ public class PreviewServlet extends HttpServlet {
 	}
 
 	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+	}
+
+	@Override
 	public void init() throws ServletException {
-		log("inited");
+		//log("inited");
 		try {
 			base = new URI(getInitParameter("url"));
 		} catch (URISyntaxException e) {

@@ -77,6 +77,7 @@ public static void main(String[] args) throws Exception {
 	FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
     Map<String, String> map = new HashMap<>();
     System.setProperty("org.osgi.service.http.port", "8686");
+    System.setProperty("felix.log.level", "4");
     Framework framework = factory.newFramework(map);
     framework.init();
     framework.start();

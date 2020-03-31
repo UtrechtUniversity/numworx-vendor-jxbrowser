@@ -1,6 +1,5 @@
 package nl.numworx.swingbrowser.ext;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -19,6 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class PreviewServlet extends HttpServlet {
+
+	@Override
+	public String getServletName() {
+		return getClass().getName();
+	}
 
 	/**
 	 * 

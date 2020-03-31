@@ -63,7 +63,8 @@
 						<Bundle-Activator>nl.numworx.swingbrowser.ext.Activator</Bundle-Activator>
 						<Export-Package>!*</Export-Package>
 						<Private-Package>nl.numworx.swingbrowser.ext</Private-Package>
-						<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,1.1)",*</Import-Package>
+						<Import-Package>nl.numworx.swingbrowser.api;version="[1.1,1.2)",*</Import-Package>
+						<Provide-Capability>osgi.service;objectClass="nl.numworx.swingbrowser.api.SwingBrowserFactory";type="ext";uses:="nl.numworx.swingbrowser.api";effective:="active"</Provide-Capability>
 					</instructions>
 				</configuration>
 			</plugin>

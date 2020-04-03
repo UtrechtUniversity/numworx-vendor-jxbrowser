@@ -88,11 +88,11 @@ public static void main(String[] args) throws Exception {
     SwingBrowserFactory fac = framework.getBundleContext().getService(ref);
     SwingBrowser applet = fac.newBrowser();
     API api = new API();
-	applet.setAPI(api);
+//	applet.setAPI(api);
     frame.setContentPane(applet.asComponent());
-    applet.loadURL("https://app.dwo.nl/dwo/apps/player.html#641855");
-    //applet.loadURL("https://numworx.uu.nl/dwo/saml/login.jsp?r=8686"); // moet naar "_top" red
-    //applet.asComponent().setName("Please login");
+//    applet.loadURL("https://app.dwo.nl/dwo/apps/player.html#641855");
+    applet.loadURL("https://numworx.uu.nl/dwo/saml/login.jsp?r=8686"); // moet naar "_top" red
+    applet.asComponent().setName("Please login");
     applet.asComponent().addPropertyChangeListener(api);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();

@@ -11,7 +11,6 @@ import java.util.Hashtable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -23,8 +22,8 @@ import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import fi.beans.numworxlf.JButton;
 import nl.numworx.swingbrowser.api.SwingBrowser;
-import nl.numworx.swingbrowser.ext.PreviewExtern.PreviewContext;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;

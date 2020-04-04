@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +21,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -81,7 +87,15 @@ public class LocalServlet extends HttpServlet {
 		if (path.startsWith("/local/resources")) {
 			
 		}
-		
+		String tail = req.getPathInfo();
+		if ("/Terminate".equals(tail)) {
+			String arg = req.getParameter("q");
+			parseJSON(new StringReader(arg));
+			//map.forEach((k,v)-> api.SetValue(k, v[0]);
+			api.Terminate("");
+			resp.getWriter().print("You may close this window.");
+			return;
+		}
 		
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
@@ -111,12 +125,7 @@ public class LocalServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			BufferedReader in = req.getReader();
 			String tail = req.getPathInfo();
-			try {
-				Map<String,String> object = (Map<String, String>) new JSONParser().parse(in);
-				object.forEach(api::SetValue);
-			} catch (ParseException e) {
-				log("Parser", e);
-			}				
+			parseJSON(in);				
             String origin = req.getHeader("Origin");
             if (origin == null) {
                 origin = "*";
@@ -131,6 +140,28 @@ public class LocalServlet extends HttpServlet {
 				api.Commit("");
 			else if ("/Terminate".equals(tail))
 				api.Terminate("");
+	}
+
+
+	private void parseJSON(Reader in) throws IOException {
+		try {
+			ContainerFactory factory = new ContainerFactory() {
+				
+				@Override
+				public Map createObjectContainer() {
+					return new LinkedHashMap();
+				}
+				
+				@Override
+				public List creatArrayContainer() {
+					return new JSONArray();
+				}
+			};
+			Map<String,String> object = (Map<String, String>) new JSONParser().parse(in, factory);
+			object.forEach(api::SetValue);
+		} catch (ParseException e) {
+			log("Parser", e);
+		}
 	}
 
 	@Override

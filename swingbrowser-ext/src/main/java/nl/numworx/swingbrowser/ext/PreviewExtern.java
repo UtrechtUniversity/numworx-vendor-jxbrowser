@@ -16,14 +16,17 @@ import javax.swing.JPanel;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import nl.numworx.swingbrowser.api.SwingBrowser;
+import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
@@ -79,6 +82,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
   }
 
 	Hashtable<String, String> cmi = new Hashtable<>();
+
+	private ServiceRegistration<SwingBrowserFactory> service;
+
+	private Dictionary<String, Object> properties;
 	
 	void fire(String key, String value) {
 		String old = cmi.put(key, value);
@@ -124,8 +131,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
     return api.GetErrorString(iErrorCode);
   }
 
-  public PreviewExtern(BundleContext bundleContext) {
+  public PreviewExtern(BundleContext bundleContext, ServiceRegistration<SwingBrowserFactory> service, Dictionary<String,Object> properties) {
         context = bundleContext;
+        this.service = service;
+        this.properties = properties;
 	}
 
 	public void init() {
@@ -135,6 +144,9 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		btn.setEnabled(false);
 		add(btn);
 		btn.addActionListener(this);
+		setOpaque(true);
+		setBackground(Constants.COLOR10);
+		
 	}
 
 	public void start() {
@@ -176,6 +188,8 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	public HttpService addingService(ServiceReference<HttpService> reference) {
 		port = reference.getProperty("org.osgi.service.http.port");
 		if (port == null) port = reference.getProperty("http.port");
+		properties.put("org.osgi.service.http.port", port);
+		this.service.setProperties(properties);
 		HttpService service = context.getService(reference);
 		btn.setEnabled(true);
 		return service;

@@ -58,7 +58,8 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
                 if (delegate.browserView != null) {
                   Container p = asComponent().getParent(); 
                   if (p != null) p.remove(asComponent()); else asComponent().invalidate();
-                  delegate.browserView = null;
+                  // eigenlijk een dispose nodig.
+                  //delegate.browserView = null;
                 }
             } catch (Exception e) {
                 try {

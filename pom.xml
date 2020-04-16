@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.numworx</groupId>
 	<artifactId>org.eclipse.equinox.http</artifactId>
-	<version>1.0.501-SNAPSHOT</version>
+	<version>1.0.500</version>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>

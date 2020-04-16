@@ -12,6 +12,7 @@
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -73,4 +74,19 @@
 		</dependency>
 	</dependencies>
 	<packaging>bundle</packaging>
+   <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+        </snapshotRepository>
+        <repository>
+            <id>release</id>
+            <name>libs-release</name>
+            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
+        </repository>
+    </distributionManagement>
+	<scm>
+		<developerConnection>scm:git:git@git.science.uu.nl:dwoproject/application/org.eclipse.equinox.http.git</developerConnection>
+	</scm>
 </project>

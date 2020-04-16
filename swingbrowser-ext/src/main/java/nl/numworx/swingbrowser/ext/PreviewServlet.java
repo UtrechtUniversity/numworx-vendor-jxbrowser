@@ -2,13 +2,15 @@ package nl.numworx.swingbrowser.ext;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class PreviewServlet extends HttpServlet {
+
+	@Override
+	public String getServletName() {
+		return getClass().getName();
+	}
 
 	/**
 	 * 
@@ -32,8 +39,25 @@ public class PreviewServlet extends HttpServlet {
 			rel += "?" + query;
 		URL url = new URL(base.toURL(), rel);		
 		URLConnection connection = url.openConnection();
-		String type = connection.getContentType();
-		resp.setContentType(type);
+		HttpURLConnection http = (HttpURLConnection) connection;
+		http.setInstanceFollowRedirects(false);
+		int code = http.getResponseCode();
+		if (code != 200) {
+			if (code == 302) {
+				resp.sendRedirect(http.getHeaderField("Location"));
+				return;
+			} else
+				resp.sendError(code, http.getResponseMessage());
+		
+			Map<String, List<String>> m = http.getHeaderFields();
+			m.forEach( (k,v) -> {
+				if (k != null)
+					v.forEach(vv -> resp.setHeader(k, vv));
+			});
+		} else {
+			String type = connection.getContentType();
+			resp.setContentType(type);
+		}
 		byte[] buffer = new byte[4096];
 		InputStream in = connection.getInputStream();
 		ServletOutputStream out = resp.getOutputStream();
@@ -45,8 +69,13 @@ public class PreviewServlet extends HttpServlet {
 	}
 
 	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+	}
+
+	@Override
 	public void init() throws ServletException {
-		log("inited");
+		//log("inited");
 		try {
 			base = new URI(getInitParameter("url"));
 		} catch (URISyntaxException e) {
@@ -59,6 +88,7 @@ public class PreviewServlet extends HttpServlet {
 	public void destroy() {
 		log("destroyed");
 	}
+
 
 
 }

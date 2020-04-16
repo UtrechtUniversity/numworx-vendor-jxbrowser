@@ -5,23 +5,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Dictionary;
 import java.util.Hashtable;
-
 import javax.servlet.ServletException;
-import javax.swing.JButton;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import nl.numworx.swingbrowser.api.SwingBrowser;
+import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
@@ -29,6 +34,32 @@ import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
 public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<HttpService, HttpService>, ActionListener, SwingBrowser, SCORM2004APIInterface {
+
+	class PreviewContext implements HttpContext {
+
+		@Override
+		public boolean handleSecurity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			return true;
+		}
+
+		@Override
+		public URL getResource(String name) {
+			return context.getBundle().getResource(name); // zonder /
+			//return getClass().getResource("/' + name); // met / aan het begin
+		}
+
+		@Override
+		public String getMimeType(String name) {
+			if (name.endsWith(".css")) {
+				return "text/css";
+			}
+			if (name.endsWith(".js")) {
+				return "text/javascript";
+			}
+			return null;
+		}
+
+	}
 
 	/**
 	 * 
@@ -45,25 +76,47 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
     private SCORM2004APIInterface api;
 		
 	public String Initialize(String dummy) {
-    return api.Initialize(dummy);
+		if (api != null)
+			return api.Initialize(dummy);
+		return "true";
   }
 
+	Hashtable<String, String> cmi = new Hashtable<>();
+
+	private ServiceRegistration<SwingBrowserFactory> service;
+
+	private Dictionary<String, Object> properties;
+	
+	void fire(String key, String value) {
+		String old = cmi.put(key, value);
+		firePropertyChange(key, old, value);
+	}
+	
   public String Commit(String dummy) {
-    return api.Commit(dummy);
+	    if (api != null) 
+	    	return api.Commit(dummy);
+		firePropertyChange("Commit", dummy, null);
+	    return "true";
   }
 
   public String Terminate(String dummy) {
-    return api.Terminate(dummy);
+	  if (api != null)
+		return api.Terminate(dummy);
+	  firePropertyChange("Terminate", dummy, null);
+	  return "true";
   }
 
   public String GetValue(String key) {
     if (api != null)
       return api.GetValue(key);
-    return "";
+    return cmi.getOrDefault(key, "");
   }
 
   public String SetValue(String key, String value) {
-    return api.SetValue(key, value);
+	if (api != null)
+		return api.SetValue(key, value);
+	fire(key, value);
+	return "true";
   }
 
   public String GetLastError() {
@@ -78,8 +131,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
     return api.GetErrorString(iErrorCode);
   }
 
-  public PreviewExtern(BundleContext bundleContext) {
+  public PreviewExtern(BundleContext bundleContext, ServiceRegistration<SwingBrowserFactory> service, Dictionary<String,Object> properties) {
         context = bundleContext;
+        this.service = service;
+        this.properties = properties;
 	}
 
 	public void init() {
@@ -89,6 +144,9 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		btn.setEnabled(false);
 		add(btn);
 		btn.addActionListener(this);
+		setOpaque(true);
+		setBackground(Constants.COLOR10);
+		
 	}
 
 	public void start() {
@@ -106,7 +164,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		        initService(tracker.getService());
 		    	String action = e.getActionCommand();
 				String path = getPath(action);
-		    	path = "/local/";
+		    	if (api != null) path = "/local/";
 				Desktop.getDesktop().browse(URI.create("http://127.0.0.1:" + port + path));
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -129,6 +187,9 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	@Override
 	public HttpService addingService(ServiceReference<HttpService> reference) {
 		port = reference.getProperty("org.osgi.service.http.port");
+		if (port == null) port = reference.getProperty("http.port");
+		properties.put("org.osgi.service.http.port", port);
+		this.service.setProperties(properties);
 		HttpService service = context.getService(reference);
 		btn.setEnabled(true);
 		return service;
@@ -138,17 +199,21 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
     Dictionary<String,String> initparams = new Hashtable<>();
 		initparams.put("url", btn.getActionCommand());
 		initparams.put("local", "http://127.0.0.1:" + port + getPath(btn.getActionCommand()));
-		HttpContext ctx = service.createDefaultHttpContext();
+		HttpContext ctx = createHttpContext();
 		try {
 			service.registerServlet("/", new PreviewServlet(), initparams, ctx);
 			service.registerServlet("/local", new LocalServlet(this), initparams, ctx);
-			service.registerResources("/local/resources", "/nl/numworx/swingbrowser/ext/resources", ctx);
+			service.registerResources("/local/resources", "nl/numworx/swingbrowser/ext/resources", ctx);
 		} catch (ServletException e) {
 			e.printStackTrace();
 		} catch (NamespaceException e) {
 			e.printStackTrace();
 		}
   }
+
+	private HttpContext createHttpContext() {
+	return new PreviewContext();
+}
 
 	@Override
 	public void modifiedService(ServiceReference<HttpService> reference, HttpService service) {
@@ -219,5 +284,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
   @Override
   public void removeConsoleListener(ConsoleListener l) {
   }
+
+	@Override
+	public void setName(String name) {
+		btn.setText(name);
+	}
 
 }

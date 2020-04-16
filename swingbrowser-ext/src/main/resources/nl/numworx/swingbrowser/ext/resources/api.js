@@ -3,6 +3,7 @@
  */
 
 window.API_1484_11 = {
+		"values": { },
 		
 		"Initialize" : function(arg) { 
 			console.log("initialize")
@@ -10,6 +11,10 @@ window.API_1484_11 = {
 		},
 		"Terminate" : function(arg) {
 			console.log("terminate")
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "Terminate", true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify(this.values));
 			return "true"
 		},
 		"GetValue" : function(name) {
@@ -23,10 +28,16 @@ window.API_1484_11 = {
 		},
 		"SetValue" : function(name, value) {
 			console.log("set value " + name + " = " + value)
+			this.values[name] = value;
+			scorm[name] = value;
 			return "true"
 		},
 		"Commit" : function(arg) {
 			console.log("commit")
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "Commit", true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify(this.values));
 			return "true"
 		},
 		"GetLastError" : function() {

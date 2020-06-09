@@ -3,6 +3,8 @@ package nl.numworx.swingbrowser.jxb;
 import java.awt.Container;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
@@ -47,7 +49,7 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
             removeRefreshListener(null);
             removeStatusListener(null);
             removeTitleListener(null);
-            delegate.browser.navigation().loadUrlAndWait("about:blank");
+            delegate.browser.navigation().loadUrl("about:blank");
            return SwingBrowserWrap.this;
           }
 
@@ -64,6 +66,7 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
                   	delegate.browserView = null; 
                 }
             } catch (Exception e) {
+            	Logger.getLogger(getClass().getName()).log(Level.WARNING, "close done", e);
             	SwingWorker<Void,Void> closer = new SwingWorker<Void, Void>() {
 
 					@Override

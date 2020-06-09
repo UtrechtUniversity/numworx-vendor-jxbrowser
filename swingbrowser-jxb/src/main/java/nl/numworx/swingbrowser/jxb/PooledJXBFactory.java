@@ -64,10 +64,15 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
                   	delegate.browserView = null; 
                 }
             } catch (Exception e) {
-                try {
-                  delegate.close();
-                } catch (IOException e1) {
-                }
+            	SwingWorker<Void,Void> closer = new SwingWorker<Void, Void>() {
+
+					@Override
+					protected Void doInBackground() throws Exception {
+		                delegate.close();
+						return null;
+					}           		
+            	};
+            	closer.execute();
                 return;
               }
               pool.returnObject(SwingBrowserWrap.this);

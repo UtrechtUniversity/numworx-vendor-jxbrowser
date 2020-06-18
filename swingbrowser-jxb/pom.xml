@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.swingbrowser</groupId>
     <artifactId>swingbrowser-parent</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
   </parent>
   <artifactId>swingbrowser-jxb</artifactId>
   <packaging>bundle</packaging>
@@ -25,12 +25,12 @@
 	    	<groupId>com.teamdev.jxbrowser</groupId>
 	    	<artifactId>jxbrowser-cross-platform</artifactId>
 	    	<type>pom</type>
-	    	<version>7.5</version>
+	    	<version>7.8</version>
 		</dependency>
 	  	<dependency>
 	  		<groupId>com.teamdev.jxbrowser</groupId>
 	  		<artifactId>jxbrowser-swing</artifactId>
-	  		<version>7.5</version>
+	  		<version>7.8</version>
 	  	</dependency>
 	</dependencies>
   <repositories>	

@@ -9,10 +9,13 @@ import com.teamdev.jxbrowser.browser.callback.InjectJsCallback;
 import com.teamdev.jxbrowser.browser.event.ConsoleMessageReceived;
 import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
+import com.teamdev.jxbrowser.event.Observer;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.frame.LoadDataParams;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
+import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
+import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
 import com.teamdev.jxbrowser.net.MimeType;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
 
@@ -46,6 +49,8 @@ public class JXBrowser implements SwingBrowser {
     browser.on(TitleChanged.class, this::onTitle);
     browser.on(StatusChanged.class, this::onStatus);
     browser.on(ConsoleMessageReceived.class, this::onMessage);
+	browser.navigation().on(NavigationStarted.class, this::navigationStarted );
+	browser.navigation().on(NavigationRedirected.class, this::navigationRedirected);
     stub = new API();
     browser.set(InjectJsCallback.class, params -> {
       installAPI(params.frame());
@@ -53,6 +58,21 @@ public class JXBrowser implements SwingBrowser {
     });
   }
 
+  void navigationStarted(NavigationStarted event) {
+	  if (console != null) {
+		  ConsoleEvent ev = new ConsoleEvent(this, Level.DEBUG, "NavigationStarted:" + event.url());
+		  console.onConsole(ev);
+	  }
+  }
+
+  void navigationRedirected(NavigationRedirected event) {
+	  if (console != null) {
+		  ConsoleEvent ev = new ConsoleEvent(this, Level.DEBUG, "NavigationRedirected:" + event.destinationUrl());
+		  console.onConsole(ev);
+	  }
+  }
+  
+  
   void onTitle(TitleChanged event) {
     TitleListener l = title;
     if (l != null) {

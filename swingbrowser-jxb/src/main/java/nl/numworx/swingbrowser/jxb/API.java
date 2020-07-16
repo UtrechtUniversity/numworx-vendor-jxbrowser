@@ -6,6 +6,7 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 
 public final class API {
   SCORM2004APIInterface delegate;
+  Runnable terminator = () -> {};
   
   @JsAccessible
   public String Initialize(String arg) {
@@ -57,6 +58,7 @@ public final class API {
  
   @JsAccessible
   public String Terminate(String arg) {
+	terminator.run();
     if (delegate != null)
       return delegate.Terminate(arg);
     return "true";

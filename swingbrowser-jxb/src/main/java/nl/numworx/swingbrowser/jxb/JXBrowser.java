@@ -1,6 +1,7 @@
 package nl.numworx.swingbrowser.jxb;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -9,10 +10,15 @@ import com.teamdev.jxbrowser.browser.callback.InjectJsCallback;
 import com.teamdev.jxbrowser.browser.event.ConsoleMessageReceived;
 import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
+import com.teamdev.jxbrowser.cookie.Cookie;
+import com.teamdev.jxbrowser.cookie.CookieStore;
+import com.teamdev.jxbrowser.event.Observer;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.frame.LoadDataParams;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
+import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
+import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
 import com.teamdev.jxbrowser.net.MimeType;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
 
@@ -27,7 +33,7 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
-public class JXBrowser implements SwingBrowser {
+public class JXBrowser implements SwingBrowser, Runnable {
 
   private volatile TitleListener title;
   private volatile RefreshListener refresh;
@@ -38,21 +44,42 @@ public class JXBrowser implements SwingBrowser {
 
   Browser browser;
   BrowserView browserView;
+  CookieStore store;
+private String url;
  
   public JXBrowser(JXBFactory jxb) {
     this.jxb = jxb;
     browser = jxb.engine.newBrowser();
+    store   = jxb.engine.cookieStore();
     browser.settings().enableTransparentBackground();
     browser.on(TitleChanged.class, this::onTitle);
     browser.on(StatusChanged.class, this::onStatus);
     browser.on(ConsoleMessageReceived.class, this::onMessage);
+	browser.navigation().on(NavigationStarted.class, this::navigationStarted );
+	browser.navigation().on(NavigationRedirected.class, this::navigationRedirected);
     stub = new API();
+    stub.terminator = this;
     browser.set(InjectJsCallback.class, params -> {
       installAPI(params.frame());
       return InjectJsCallback.Response.proceed();
     });
   }
 
+  void navigationStarted(NavigationStarted event) {
+	  if (console != null) {
+		  ConsoleEvent ev = new ConsoleEvent(this, Level.DEBUG, "NavigationStarted:" + event.url());
+		  console.onConsole(ev);
+	  }
+  }
+
+  void navigationRedirected(NavigationRedirected event) {
+	  if (console != null) {
+		  ConsoleEvent ev = new ConsoleEvent(this, Level.DEBUG, "NavigationRedirected:" + event.destinationUrl());
+		  console.onConsole(ev);
+	  }
+  }
+  
+  
   void onTitle(TitleChanged event) {
     TitleListener l = title;
     if (l != null) {
@@ -126,6 +153,7 @@ public class JXBrowser implements SwingBrowser {
   @Override
   public void loadURL(String url) {
     if (url == null) url = "about:blank";
+    this.url = url;
     browser.navigation().loadUrl(url);
   }
 
@@ -180,4 +208,13 @@ public class JXBrowser implements SwingBrowser {
   boolean isClosed() {
     return browser.isClosed();
   }
+
+	@Override
+	public void run() {
+		List<Cookie> list = store.cookies(url);
+		for (Cookie item: list) {
+			if (item.name().startsWith("dwo"))
+				stub.SetValue(item.name(), item.value());
+		}
+	}
 }

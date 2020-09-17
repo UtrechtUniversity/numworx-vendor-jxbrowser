@@ -30,6 +30,12 @@ public final class API {
       return delegate.GetValue(arg);
     return "";
   }
+  
+  @JsAccessible
+  public String LMSGetValue(String arg) {
+	  return GetValue(arg);
+  }
+  
   @JsAccessible
   public String SetValue(String key, String value) {
     if (delegate != null) 
@@ -49,6 +55,13 @@ public final class API {
       return delegate.GetLastError();
     return "0";
   }
+  
+  @JsAccessible
+  public String LMSGetLastError() {
+	  return GetLastError();
+  }
+  
+  
   @JsAccessible
   public String Commit(String arg) {
     if (delegate != null)

@@ -2,7 +2,6 @@ package nl.numworx.swingbrowser.jxb;
 
 import java.awt.Container;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -4,6 +4,7 @@ import javax.swing.JComponent;
 
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
+import com.teamdev.jxbrowser.engine.EngineOptions.Builder;
 import com.teamdev.jxbrowser.engine.Language;
 import com.teamdev.jxbrowser.engine.RenderingMode;
 
@@ -20,7 +21,15 @@ public class JXBFactory implements SwingBrowserFactory {
     licence = "1BNDIEOFAYVK0JG2LUSYWT2QRQ11IJ40O41BARIKQGLTO7WV9Z7P4UANHYCT6NPO44EPC4";
     
     licence = System.getProperty("jxbrowser.license.key", licence);
-    EngineOptions options = EngineOptions.newBuilder(RenderingMode.OFF_SCREEN)
+    String remoteDebuggingPort = System.getProperty("jxbrowser.remote.debugging.port", "-1");
+    
+    Builder builder = EngineOptions.newBuilder(RenderingMode.OFF_SCREEN);
+    try {
+    	int port = Integer.parseInt(remoteDebuggingPort);
+    	if (port > 0)
+    		builder = builder.remoteDebuggingPort(port);
+    } catch(Exception nop) {}
+	EngineOptions options = builder
         .licenseKey(licence)
         .language(Language.of(JComponent.getDefaultLocale()).orElse(Language.ENGLISH_US)) // Language.of(Locale)
         .build();

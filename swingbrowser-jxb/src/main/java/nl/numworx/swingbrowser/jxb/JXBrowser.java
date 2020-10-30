@@ -104,18 +104,19 @@ private String url;
   
   private static Level toLevel(ConsoleMessageLevel level) {
     switch(level) {
-      default:
-      case UNRECOGNIZED:
-      case CONSOLE_MESSAGE_LEVEL_UNSPECIFIED:
-        return Level.LOG;
-      case LOG:  return Level.INFO;
+      case LOG:  
+    	return Level.INFO;
+      case VERBOSE:
       case DEBUG:
         return Level.DEBUG;
       case LEVEL_ERROR:
         return Level.ERROR;
       case WARNING:
         return Level.WARN;
+      case UNRECOGNIZED:
+      case CONSOLE_MESSAGE_LEVEL_UNSPECIFIED:
     }
+    return Level.LOG;
   }
 
   public void installAPI(Frame frame) {

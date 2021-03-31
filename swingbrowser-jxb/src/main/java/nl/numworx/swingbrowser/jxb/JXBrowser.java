@@ -51,7 +51,7 @@ private String url;
     this.jxb = jxb;
     browser = jxb.engine.newBrowser();
     store   = jxb.engine.cookieStore();
-    browser.settings().enableTransparentBackground();
+    //browser.settings().enableTransparentBackground();
     browser.on(TitleChanged.class, this::onTitle);
     browser.on(StatusChanged.class, this::onStatus);
     browser.on(ConsoleMessageReceived.class, this::onMessage);

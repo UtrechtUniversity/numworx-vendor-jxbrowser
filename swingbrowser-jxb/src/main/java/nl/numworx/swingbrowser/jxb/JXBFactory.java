@@ -23,7 +23,7 @@ public class JXBFactory implements SwingBrowserFactory {
     licence = System.getProperty("jxbrowser.license.key", licence);
     String remoteDebuggingPort = System.getProperty("jxbrowser.remote.debugging.port", "-1");
     
-    Builder builder = EngineOptions.newBuilder(RenderingMode.OFF_SCREEN);
+    Builder builder = EngineOptions.newBuilder(RenderingMode.HARDWARE_ACCELERATED);
     try {
     	int port = Integer.parseInt(remoteDebuggingPort);
     	if (port > 0)

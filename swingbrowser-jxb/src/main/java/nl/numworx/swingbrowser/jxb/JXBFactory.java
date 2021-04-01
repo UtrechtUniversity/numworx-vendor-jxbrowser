@@ -19,6 +19,7 @@ public class JXBFactory implements SwingBrowserFactory {
 
     String licence = "1BNDHFSC1FSXE8ZQ3CGF91WIOWKO39P18F6JHR1D9G9NYT5IPV0ZEJAIRCA8F5K1040G6S";
     licence = "1BNDIEOFAYVK0JG2LUSYWT2QRQ11IJ40O41BARIKQGLTO7WV9Z7P4UANHYCT6NPO44EPC4";
+    licence = "1BNDIEOFAYZ5UWORS4IPT18EK6ZN4JGH5XBV8TG6QREOYC1WU89A3L95AUCT6LQLRVA0K9";
     
     licence = System.getProperty("jxbrowser.license.key", licence);
     String remoteDebuggingPort = System.getProperty("jxbrowser.remote.debugging.port", "-1");

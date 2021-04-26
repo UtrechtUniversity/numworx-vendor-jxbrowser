@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,13 +80,25 @@ public class LocalServlet extends HttpServlet {
 				if (ld != null && ! ld.isEmpty()) {
 					scorm.put("cmi.launch_data", ld);
 				}
+
+				ld = api.GetValue("dme.oauth._children");
+				if (ld != null && ! ld.isEmpty()) {
+					StringTokenizer st = new StringTokenizer(ld, " ,");
+					while(st.hasMoreTokens()) {
+						String key = "dme.oauth." + st.nextToken();
+						scorm.put(key, api.GetValue(key));
+					}
+					scorm.put("dme.oauth.endpoint", "/dwo/saml/login");
+					
+				}
+				
 			}
 			scorm.writeJSONString(w);
 			return;
 		}
 		
 		if (path.startsWith("/local/resources")) {
-			
+			LOG.warning(" missing " + path);
 		}
 		String tail = req.getPathInfo();
 		if ("/Terminate".equals(tail)) {

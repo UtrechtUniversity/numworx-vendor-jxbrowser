@@ -41,19 +41,28 @@ public class PreviewServlet extends HttpServlet {
 		URLConnection connection = url.openConnection();
 		HttpURLConnection http = (HttpURLConnection) connection;
 		http.setInstanceFollowRedirects(false);
-		int code = http.getResponseCode();
+
+		int code = HttpServletResponse.SC_NOT_FOUND;
+		try { code = http.getResponseCode(); } 
+		catch(Exception oops) { 
+			log("oops", oops);
+		}
+
 		if (code != 200) {
 			if (code == 302) {
 				resp.sendRedirect(http.getHeaderField("Location"));
 				return;
 			} else
+			{
 				resp.sendError(code, http.getResponseMessage());
+			}
 		
 			Map<String, List<String>> m = http.getHeaderFields();
 			m.forEach( (k,v) -> {
 				if (k != null)
 					v.forEach(vv -> resp.setHeader(k, vv));
 			});
+			return;
 		} else {
 			String type = connection.getContentType();
 			resp.setContentType(type);

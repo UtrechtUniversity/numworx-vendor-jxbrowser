@@ -88,8 +88,12 @@ public class LocalServlet extends HttpServlet {
 						String key = "dme.oauth." + st.nextToken();
 						scorm.put(key, api.GetValue(key));
 					}
-					scorm.put("dme.oauth.endpoint", "/dwo/saml/login");
+					int port = req.getServerPort();
+					String host = req.getScheme() + "://" + req.getServerName() + ":" + port;
 					
+					scorm.put("dme.oauth.endpoint", host + "/dwo/saml/login");
+				    api.SetValue("dme.oauth.redirect_uri", host + "/dwo/oauth2/login3.jsp"); // FIXME
+
 				}
 				
 			}
@@ -105,6 +109,9 @@ public class LocalServlet extends HttpServlet {
 			String arg = req.getParameter("q");
 			parseJSON(new StringReader(arg));
 			//map.forEach((k,v)-> api.SetValue(k, v[0]);
+// ons kent ons
+			api.SetValue("dwoSAMLchallenge", api.GetValue("dme.oauth.code_challenge"));
+			
 			api.Terminate("");
 			resp.getWriter().print("You may close this window.");
 			return;

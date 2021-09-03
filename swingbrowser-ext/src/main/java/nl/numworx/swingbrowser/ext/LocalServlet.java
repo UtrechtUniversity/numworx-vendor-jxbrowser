@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,19 +80,38 @@ public class LocalServlet extends HttpServlet {
 				if (ld != null && ! ld.isEmpty()) {
 					scorm.put("cmi.launch_data", ld);
 				}
+
+				ld = api.GetValue("dme.oauth._children");
+				if (ld != null && ! ld.isEmpty()) {
+					StringTokenizer st = new StringTokenizer(ld, " ,");
+					while(st.hasMoreTokens()) {
+						String key = "dme.oauth." + st.nextToken();
+						scorm.put(key, api.GetValue(key));
+					}
+					int port = req.getServerPort();
+					String host = req.getScheme() + "://" + req.getServerName() + ":" + port;
+					
+					scorm.put("dme.oauth.endpoint", host + "/dwo/saml/login");
+				    api.SetValue("dme.oauth.redirect_uri", host + "/dwo/oauth2/login3.jsp"); // FIXME
+
+				}
+				
 			}
 			scorm.writeJSONString(w);
 			return;
 		}
 		
 		if (path.startsWith("/local/resources")) {
-			
+			LOG.warning(" missing " + path);
 		}
 		String tail = req.getPathInfo();
 		if ("/Terminate".equals(tail)) {
 			String arg = req.getParameter("q");
 			parseJSON(new StringReader(arg));
 			//map.forEach((k,v)-> api.SetValue(k, v[0]);
+// ons kent ons
+			api.SetValue("dwoSAMLchallenge", api.GetValue("dme.oauth.code_challenge"));
+			
 			api.Terminate("");
 			resp.getWriter().print("You may close this window.");
 			return;

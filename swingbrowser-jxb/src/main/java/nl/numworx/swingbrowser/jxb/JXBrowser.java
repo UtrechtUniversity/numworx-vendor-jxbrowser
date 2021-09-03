@@ -33,12 +33,12 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
-public class JXBrowser implements SwingBrowser, Runnable {
+public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener {
 
   private volatile TitleListener title;
   private volatile RefreshListener refresh;
   private volatile StatusListener status;
-  private volatile ConsoleListener console;
+  private volatile ConsoleListener console = this;
   private final JXBFactory jxb;
   private API stub;
 
@@ -202,7 +202,7 @@ private String url;
 
   @Override
   public void removeConsoleListener(ConsoleListener l) {
-    console = null;
+    console = this;
 
   }
 
@@ -217,5 +217,9 @@ private String url;
 			if (item.name().startsWith("dwo"))
 				stub.SetValue(item.name(), item.value());
 		}
+	}
+
+	@Override
+	public void onConsole(ConsoleEvent event) {
 	}
 }

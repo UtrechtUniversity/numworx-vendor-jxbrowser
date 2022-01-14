@@ -1,6 +1,8 @@
 package nl.numworx.swingbrowser.jxb;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -12,14 +14,11 @@ import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
 import com.teamdev.jxbrowser.cookie.Cookie;
 import com.teamdev.jxbrowser.cookie.CookieStore;
-import com.teamdev.jxbrowser.event.Observer;
 import com.teamdev.jxbrowser.frame.Frame;
-import com.teamdev.jxbrowser.frame.LoadDataParams;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
 import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
 import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
-import com.teamdev.jxbrowser.net.MimeType;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
 
 import nl.numworx.swingbrowser.api.ConsoleEvent;
@@ -146,10 +145,14 @@ private String url;
 
   @Override
   public void loadContent(String content, String type) {
-    MimeType mimeType = MimeType.of(type);
-    LoadDataParams data = LoadDataParams.newBuilder(content).mimeType(mimeType).build();
-    browser.mainFrame().get().loadData(data );
-  }
+//    MimeType mimeType = MimeType.of(type);
+//    LoadDataParams data = LoadDataParams.newBuilder(content).mimeType(mimeType).build();
+//    browser.mainFrame().get().loadData(data );
+	  String base64Html = Base64.getEncoder().encodeToString(content.getBytes(StandardCharsets.UTF_8));
+	  String dataUrl = "data:"
+	  		+ type
+	  		+ ";charset=utf-8;base64," + base64Html;
+	  browser.navigation().loadUrl(dataUrl);  }
 
   @Override
   public void loadURL(String url) {

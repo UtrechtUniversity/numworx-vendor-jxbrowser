@@ -1,7 +1,9 @@
 package nl.numworx.swingbrowser.jxb;
 
 import java.awt.Container;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -133,6 +135,18 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
     public void removeConsoleListener(ConsoleListener l) {
       delegate.removeConsoleListener(l);
     }
+
+	public void setSize(int i, int j) {
+		delegate.setSize(i, j);
+	}
+
+	public void loadContentAndWait(String content, String type) {
+		delegate.loadContentAndWait(content, type);
+	}
+
+	public Optional<BufferedImage> bitmap() {
+		return delegate.bitmap();
+	}
     
   }
   

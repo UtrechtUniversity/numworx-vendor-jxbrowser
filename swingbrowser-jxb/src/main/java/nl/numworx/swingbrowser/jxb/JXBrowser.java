@@ -1,9 +1,11 @@
 package nl.numworx.swingbrowser.jxb;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 
@@ -19,7 +21,9 @@ import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
 import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
 import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
+import com.teamdev.jxbrowser.ui.Size;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
+import com.teamdev.jxbrowser.view.swing.graphics.BitmapImage;
 
 import nl.numworx.swingbrowser.api.ConsoleEvent;
 import nl.numworx.swingbrowser.api.ConsoleEvent.Level;
@@ -225,4 +229,26 @@ private String url;
 	@Override
 	public void onConsole(ConsoleEvent event) {
 	}
+
+	@Override
+	public void setSize(int i, int j) {
+		Size size = Size.of(i, j);
+		browser.resize(size);		
+	}
+
+	@Override
+	public void loadContentAndWait(String content, String type) {
+		  String base64Html = Base64.getEncoder().encodeToString(content.getBytes(StandardCharsets.UTF_8));
+		  String dataUrl = "data:"
+		  		+ type
+		  		+ ";charset=utf-8;base64," + base64Html;
+		  browser.navigation().loadUrlAndWait(dataUrl);
+	}
+
+	@Override
+	public Optional<BufferedImage> bitmap() {
+		return Optional.of(BitmapImage.toToolkit(browser.bitmap()));
+	}
+	
+	
 }

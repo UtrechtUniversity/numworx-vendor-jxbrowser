@@ -3,7 +3,9 @@
  */
 package nl.numworx.swingbrowser.api;
 
+import java.awt.image.BufferedImage;
 import java.io.Closeable;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 
@@ -34,4 +36,8 @@ public interface SwingBrowser extends Closeable {
   
   void addConsoleListener(ConsoleListener l);
   void removeConsoleListener(ConsoleListener l);
+  
+  default void setSize(int width, int height) { }
+  default void loadContentAndWait(String content, String type) { loadContent(content, type); }
+  default Optional<BufferedImage> bitmap() { return Optional.empty(); }
 }

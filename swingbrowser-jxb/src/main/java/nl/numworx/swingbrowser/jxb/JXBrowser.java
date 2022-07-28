@@ -1,6 +1,8 @@
 package nl.numworx.swingbrowser.jxb;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -21,6 +23,7 @@ import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
 import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
 import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
+import com.teamdev.jxbrowser.ui.Bitmap;
 import com.teamdev.jxbrowser.ui.Size;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
 import com.teamdev.jxbrowser.view.swing.graphics.BitmapImage;
@@ -245,10 +248,43 @@ private String url;
 		  browser.navigation().loadUrlAndWait(dataUrl);
 	}
 
+	private static boolean noBitmapImage;
 	@Override
 	public Optional<BufferedImage> bitmap() {
-		return Optional.of(BitmapImage.toToolkit(browser.bitmap()));
+		try {
+			Bitmap bitmap = browser.bitmap();
+			return Optional.of(toToolkit(bitmap)); // since 7.7
+		} catch(Exception oops) {	
+			oops.printStackTrace();
+		}
+		return Optional.empty();
 	}
-	
-	
+
+	public BufferedImage toToolkit(Bitmap bitmap) {
+		if (!noBitmapImage) {
+			try {
+				return BitmapImage.toToolkit(bitmap);
+			} catch(NoClassDefFoundError oops) {
+				noBitmapImage = true;
+			}
+		}
+// no bitmap image
+		Size size = bitmap.size();
+		BufferedImage buffer = new BufferedImage(size.width(), size.height(), BufferedImage.TYPE_INT_ARGB_PRE);
+		WritableRaster raster = buffer.getRaster();
+		byte[] pixels = bitmap.pixels();
+		int[] pixes = new int[pixels.length];
+		for (int i = 0; i < pixes.length/4; i++) {
+			int b = pixels[i*4]   & 0xFF;
+			int g = pixels[i*4+1] & 0xFF;
+			int r = pixels[i*4+2] & 0xFF;
+			int a = pixels[i*4+3] & 0xFF;
+			pixes[i*4+0] = r&0xFF;
+			pixes[i*4+1] = g&0xFF;
+			pixes[i*4+2] = b&0xFF;
+			pixes[i*4+3] = a&0xFF;
+		}
+		raster.setPixels(0, 0, size.width(), size.height(), pixes);
+		return buffer;
+	}
 }

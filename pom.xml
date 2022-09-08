@@ -8,12 +8,12 @@
 	</parent>
 	<groupId>nl.numworx.swingbrowser</groupId>
 	<artifactId>swingbrowser-parent</artifactId>
-	<version>0.0.10</version>
+	<version>0.0.11</version>
 	<packaging>pom</packaging>
 	<name>SwingBrowser Multi module</name>
 	<modules>
 		<module>swingbrowser-api</module>
-		<module>swingbrowser-jfx</module>
+		<!--<module>swingbrowser-jfx</module>-->
 		<module>swingbrowser-jxb</module>
 		<module>swingbrowser-ext</module>
 	</modules>
@@ -57,7 +57,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-api</artifactId>
-				<version>0.0.3</version>
+				<version>0.0.11</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

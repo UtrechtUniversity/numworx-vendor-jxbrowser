@@ -13,7 +13,7 @@
 	<name>SwingBrowser Multi module</name>
 	<modules>
 		<module>swingbrowser-api</module>
-		<module>swingbrowser-jfx</module>
+		<!--<module>swingbrowser-jfx</module>-->
 		<module>swingbrowser-jxb</module>
 		<module>swingbrowser-ext</module>
 	</modules>

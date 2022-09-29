@@ -57,11 +57,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-api</artifactId>
-<<<<<<< HEAD
-				<version>0.0.11</version>
-=======
 				<version>0.0.12</version>
->>>>>>> refs/heads/release/0.0.12
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

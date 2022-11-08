@@ -2,17 +2,22 @@ package nl.numworx.swingbrowser.jxb;
 
 import javax.swing.JComponent;
 
+import com.teamdev.jxbrowser.callback.Callback;
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
 import com.teamdev.jxbrowser.engine.EngineOptions.Builder;
 import com.teamdev.jxbrowser.engine.Language;
 import com.teamdev.jxbrowser.engine.RenderingMode;
+import com.teamdev.jxbrowser.permission.callback.RequestPermissionCallback;
 
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 
 public class JXBFactory implements SwingBrowserFactory {
 
+  static boolean isMac = System.getProperty("os.name").contains("Mac OS X");
+	
+	
   public JXBFactory() {
 
     //System.setProperty("jxbrowser.license.key", "1BNDHFSC1FSXE8ZQ3CGF91WIOWKO39P18F6JHR1D9G9NYT5IPV0ZEJAIRCA8F5K1040G6S");
@@ -32,11 +37,21 @@ public class JXBFactory implements SwingBrowserFactory {
     	if (port > 0)
     		builder = builder.remoteDebuggingPort(port);
     } catch(Exception nop) {}
-	EngineOptions options = builder
+
+    if (isMac) {
+    	builder = builder
+    	        .addSwitch("--disable-features=NativeNotifications")
+    	;
+    }
+    
+    EngineOptions options = builder
         .licenseKey(licence)
         .language(Language.of(JComponent.getDefaultLocale()).orElse(Language.ENGLISH_US)) // Language.of(Locale)
         .build();
     engine = Engine.newInstance(options);
+	engine.permissions().set(RequestPermissionCallback.class, (params, tell) -> {
+		tell.grant();
+	});
   }
   
   Engine engine;

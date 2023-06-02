@@ -1,6 +1,11 @@
 package nl.numworx.swingbrowser.jxb;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import com.teamdev.jxbrowser.js.JsAccessible;
+import com.teamdev.jxbrowser.js.JsFunction;
+import com.teamdev.jxbrowser.js.JsObject;
 
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 
@@ -80,5 +85,25 @@ public final class API {
   @JsAccessible
   public String LMSFinish(String arg) {
     return Terminate(arg);
+  }
+  
+  @JsAccessible
+  public void GetValueAsync(String arg, JsObject callback) {
+	  Consumer<String> consumer = new Consumer<String>() {
+
+		@Override
+		public void accept(String t) {
+			//System.err.println(callback.ownPropertyNames());
+			Optional o = callback.property("resolve");
+			//System.err.println(o);
+			try {
+				JsFunction f = (JsFunction) o.get();
+				f.invoke(callback, t);
+				//System.err.println("done");
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}};
+	  delegate.GetValueAsync(arg, consumer);
   }
 }

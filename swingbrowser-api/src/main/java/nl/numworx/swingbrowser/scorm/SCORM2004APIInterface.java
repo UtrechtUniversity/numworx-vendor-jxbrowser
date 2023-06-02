@@ -1,5 +1,7 @@
 package nl.numworx.swingbrowser.scorm;
 
+import java.util.function.Consumer;
+
 public interface SCORM2004APIInterface {
 
     String Initialize(String dummy);
@@ -17,4 +19,8 @@ public interface SCORM2004APIInterface {
     String GetDiagnostic(String iErrorCode);
 
     String GetErrorString(String iErrorCode);
+    
+    default void GetValueAsync(String key, Consumer<String> consumer) {
+    	consumer.accept(GetValue(key));
+    }
 }

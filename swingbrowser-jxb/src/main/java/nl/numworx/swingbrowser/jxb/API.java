@@ -94,11 +94,12 @@ public final class API {
 		@Override
 		public void accept(String t) {
 			//System.err.println(callback.ownPropertyNames());
-			Optional o = callback.property("resolve");
+			//Optional o = callback.property("resolve");
 			//System.err.println(o);
 			try {
-				JsFunction f = (JsFunction) o.get();
-				f.invoke(callback, t);
+				//JsFunction f = (JsFunction) o.get(); / /niet in 7.5
+				//f.invoke(callback, t);
+				callback.call("resolve", t);
 				//System.err.println("done");
 			} catch(Exception e) {
 				e.printStackTrace();

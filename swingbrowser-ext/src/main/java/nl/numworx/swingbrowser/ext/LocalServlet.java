@@ -90,8 +90,12 @@ public class LocalServlet extends HttpServlet {
 					}
 					int port = req.getServerPort();
 					String host = req.getScheme() + "://" + req.getServerName() + ":" + port;
-					
-					scorm.put("dme.oauth.endpoint", host + "/dwo/saml/login");
+// take endpoint from api, patch host!	
+					String endpoint = (String) scorm.get("dme.oauth.endpoint");
+// http://X
+					int slash = endpoint.indexOf('/', 8);
+					endpoint = endpoint.substring(slash);
+					scorm.put("dme.oauth.endpoint", host + endpoint);
 				    api.SetValue("dme.oauth.redirect_uri", host + "/dwo/oauth2/login3.jsp"); // FIXME
 
 				}

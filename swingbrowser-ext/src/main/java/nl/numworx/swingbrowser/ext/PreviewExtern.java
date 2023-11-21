@@ -2,15 +2,18 @@ package nl.numworx.swingbrowser.ext;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -33,7 +36,7 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
-public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<HttpService, HttpService>, ActionListener, SwingBrowser, SCORM2004APIInterface {
+public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<HttpService, HttpService>, Action, SwingBrowser, SCORM2004APIInterface {
 
 	class PreviewContext implements HttpContext {
 
@@ -139,11 +142,11 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 
 	public void init() {
 		tracker = new ServiceTracker<>(context, HttpService.class, this);
-		btn = new JButton("Open Browser");
-		btn.setActionCommand("about:blank");
+		putValue(NAME, "Open Browser");
+		putValue(ACTION_COMMAND_KEY, "about:blank");
+		btn = new JButton(this);
 		btn.setEnabled(false);
 		add(btn);
-		btn.addActionListener(this);
 		setOpaque(true);
 		setBackground(Constants.COLOR10);
 		
@@ -197,8 +200,8 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 
   private void initService(HttpService service) {
     Dictionary<String,String> initparams = new Hashtable<>();
-		initparams.put("url", btn.getActionCommand());
-		initparams.put("local", "http://127.0.0.1:" + port + getPath(btn.getActionCommand()));
+		initparams.put("url", getValue(ACTION_COMMAND_KEY).toString());
+		initparams.put("local", "http://127.0.0.1:" + port + getPath(getValue(ACTION_COMMAND_KEY).toString()));
 		HttpContext ctx = createHttpContext();
 		try {
 			service.registerServlet("/", new PreviewServlet(), initparams, ctx);
@@ -235,16 +238,16 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 
   @Override
   public void loadContent(String content, String type) {
-    btn.setActionCommand("about:blank");
-    btn.setToolTipText(null);
-    btn.setText("Open " + type);
+	putValue(ACTION_COMMAND_KEY, "about:blank");  
+    putValue(SHORT_DESCRIPTION, null);
+    putValue(NAME, "Open " + type);
   }
 
   @Override
   public void loadURL(String url) {
-    btn.setActionCommand(url);
-    btn.setToolTipText(url);
-    btn.setText("Open URL");
+	putValue(ACTION_COMMAND_KEY, url);  
+	putValue(SHORT_DESCRIPTION, url);
+	putValue(NAME, "Open URL");
   }
 
   @Override
@@ -287,7 +290,20 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 
 	@Override
 	public void setName(String name) {
-		btn.setText(name);
+		putValue(NAME, name);
+	}
+
+	private Map<String,Object> values = new HashMap<>();
+	
+	@Override
+	public Object getValue(String key) {
+		return values.get(key);
+	}
+
+	@Override
+	public void putValue(String key, Object value) {
+		Object old = values.put(key, value);
+		firePropertyChange(key, old, value);
 	}
 
 }

@@ -95,7 +95,6 @@ public class LocalServlet extends HttpServlet {
 					scorm.put("dme.oauth.endpoint", host + u.getRawPath());
 					u = URI.create(api.GetValue("dme.oauth.redirect_uri"));
 				    api.SetValue("dme.oauth.redirect_uri", host + u.getRawPath());
-
 				}
 				
 			}

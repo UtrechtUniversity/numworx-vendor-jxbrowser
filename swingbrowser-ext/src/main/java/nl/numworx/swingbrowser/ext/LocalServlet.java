@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,14 +91,10 @@ public class LocalServlet extends HttpServlet {
 					}
 					int port = req.getServerPort();
 					String host = req.getScheme() + "://" + req.getServerName() + ":" + port;
-// take endpoint from api, patch host!	
-					String endpoint = (String) scorm.get("dme.oauth.endpoint");
-// http://X
-					int slash = endpoint.indexOf('/', 8);
-					endpoint = endpoint.substring(slash);
-					scorm.put("dme.oauth.endpoint", host + endpoint);
-				    api.SetValue("dme.oauth.redirect_uri", host + "/dwo/oauth2/login3.jsp"); // FIXME
-
+					URI u = URI.create(api.GetValue("dme.oauth.endpoint"));
+					scorm.put("dme.oauth.endpoint", host + u.getRawPath());
+					u = URI.create(api.GetValue("dme.oauth.redirect_uri"));
+				    api.SetValue("dme.oauth.redirect_uri", host + u.getRawPath());
 				}
 				
 			}

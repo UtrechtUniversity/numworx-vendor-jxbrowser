@@ -13,11 +13,13 @@ import javax.swing.JComponent;
 
 import com.teamdev.jxbrowser.browser.Browser;
 import com.teamdev.jxbrowser.browser.callback.InjectJsCallback;
+import com.teamdev.jxbrowser.browser.callback.SavePasswordCallback;
 import com.teamdev.jxbrowser.browser.event.ConsoleMessageReceived;
 import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
 import com.teamdev.jxbrowser.cookie.Cookie;
 import com.teamdev.jxbrowser.cookie.CookieStore;
+import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
@@ -41,6 +43,16 @@ import nl.numworx.swingbrowser.scorm.TitleListener;
 
 public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener {
 
+  private static class DisablePassword {
+  /**
+   * disable passwords
+   * @param engine
+   * @since 7.20
+   */
+  	  private static void disable(Browser browser) {
+  		browser.set(SavePasswordCallback.class, (params, tell) -> tell.neverSave());
+      }
+    }
   private volatile TitleListener title;
   private volatile RefreshListener refresh;
   private volatile StatusListener status;
@@ -69,6 +81,12 @@ private String url;
       installAPI(params.frame());
       return InjectJsCallback.Response.proceed();
     });
+    
+    try { // do not ask for saving a password, we can't save it at all.
+    	DisablePassword.disable(browser);
+    } catch(Throwable t) {
+    	t.printStackTrace();
+    }
   }
 
   void navigationStarted(NavigationStarted event) {

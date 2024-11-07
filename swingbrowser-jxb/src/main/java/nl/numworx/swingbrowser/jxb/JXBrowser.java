@@ -85,7 +85,6 @@ private String url;
     try { // do not ask for saving a password, we can't save it at all.
     	DisablePassword.disable(browser);
     } catch(Throwable t) {
-    	t.printStackTrace();
     }
   }
 

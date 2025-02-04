@@ -26,7 +26,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>nl.numworx.swingbrowser.api,nl.numworx.swingbrowser.scorm</Export-Package>
+						<Export-Package>nl.numworx.swingbrowser.api,nl.numworx.swingbrowser.scorm, nl.numworx.swingbrowser.print</Export-Package>
 					</instructions>
 				</configuration>
 			</plugin>

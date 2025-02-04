@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.swing.JComponent;
 
+import nl.numworx.swingbrowser.print.Printing;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
@@ -40,4 +41,5 @@ public interface SwingBrowser extends Closeable {
   default void setSize(int width, int height) { }
   default void loadContentAndWait(String content, String type) { loadContent(content, type); }
   default Optional<BufferedImage> bitmap() { return Optional.empty(); }
+  default Optional<Printing> printing() { return Optional.empty(); }
 }

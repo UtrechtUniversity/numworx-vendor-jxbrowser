@@ -65,7 +65,7 @@ public class PreviewServlet extends HttpServlet {
 			return;
 		} else {
 			String type = connection.getContentType();
-			resp.setContentType(type);
+			if(type != null) resp.setContentType(type);
 		}
 		byte[] buffer = new byte[4096];
 		InputStream in = connection.getInputStream();

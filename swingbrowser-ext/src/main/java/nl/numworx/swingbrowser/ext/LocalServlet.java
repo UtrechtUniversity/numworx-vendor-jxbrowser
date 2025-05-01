@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,7 +66,13 @@ public class LocalServlet extends HttpServlet {
 		if ("/local/".equals(path)) {
 			resp.setContentType("text/html; charset=UTF-8");
 			PrintWriter w = resp.getWriter();
-			w.print(message);
+			String url = getInitParameter("url");
+			String local = getInitParameter("local");
+			String code = req.getParameter("code");
+			String state = req.getParameter("state");
+			local = append(local, code, state);
+			String format = java.text.MessageFormat.format(message, url, local);
+			w.print(format);
 			return;
 		}
 		if ("/local/scorm.js".equals(path)) {
@@ -121,10 +128,22 @@ public class LocalServlet extends HttpServlet {
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
+	private String append(String url, String code, String state) {
+		char has = url.contains("?") ? '&' : '?';
+		if (code != null) {
+			url += has + "code=" + URLEncoder.encode(code);
+			has = '&';
+		}
+		if (state != null) {
+			url += has + "state=" + URLEncoder.encode(state);		
+		}
+		
+		return url;
+	}
+
+
 	@Override
 	public void init() throws ServletException {
-		String url = getInitParameter("url");
-		String local = getInitParameter("local");
 		try {
 			InputStream in = getClass().getResourceAsStream("resources/index.tmpl");
 			InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -135,7 +154,10 @@ public class LocalServlet extends HttpServlet {
 				builder.append(buffer, 0, len);
 			}
 			reader.close();
-			message = java.text.MessageFormat.format(builder.toString(), url, local);
+			String url = getInitParameter("url");
+			String local = getInitParameter("local");
+			//message = java.text.MessageFormat.format(builder.toString(), url, local);
+			message = builder.toString();
 		} catch (IOException e) {
 			log("init", e);
 			throw new ServletException(e.getMessage(), e);

@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 import com.teamdev.jxbrowser.frame.Frame;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
+import nl.numworx.swingbrowser.print.Printing;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
@@ -146,6 +147,10 @@ public class PooledJXBFactory extends JXBFactory implements SwingBrowserFactory 
 
 	public Optional<BufferedImage> bitmap() {
 		return delegate.bitmap();
+	}
+
+	public Optional<Printing> printing() {
+		return delegate.printing();
 	}
     
   }

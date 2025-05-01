@@ -199,6 +199,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	}
 
   private void initService(HttpService service) {
+	exitService(service);
     Dictionary<String,String> initparams = new Hashtable<>();
 		initparams.put("url", getValue(ACTION_COMMAND_KEY).toString());
 		initparams.put("local", "http://127.0.0.1:" + port + getPath(getValue(ACTION_COMMAND_KEY).toString()));
@@ -226,9 +227,17 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	@Override
 	public void removedService(ServiceReference<HttpService> reference, HttpService service) {
 		btn.setEnabled(false);
-		service.unregister("/");
-		service.unregister("/local/resources");
+		exitService(service);
 		context.ungetService(reference);
+	}
+
+	protected void exitService(HttpService service) {
+		try {
+			service.unregister("/");
+			service.unregister("/local/resources");
+			service.unregister("/local");
+		} catch (Exception e) {
+		}
 	}
 
   @Override
@@ -248,6 +257,10 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	putValue(ACTION_COMMAND_KEY, url);  
 	putValue(SHORT_DESCRIPTION, url);
 	putValue(NAME, "Open URL");
+		
+	if (url == null) {
+		exitService(tracker.getService());
+	}
   }
 
   @Override

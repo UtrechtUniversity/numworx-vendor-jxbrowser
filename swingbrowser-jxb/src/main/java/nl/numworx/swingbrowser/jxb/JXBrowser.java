@@ -35,13 +35,15 @@ import nl.numworx.swingbrowser.api.ConsoleEvent.Level;
 import nl.numworx.swingbrowser.api.StatusEvent;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.TitleEvent;
+import nl.numworx.swingbrowser.print.PrintListener;
+import nl.numworx.swingbrowser.print.Printing;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
-public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener {
+public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener, Printing {
 
   private static class DisablePassword {
   /**
@@ -304,4 +306,28 @@ private String url;
 		raster.setPixels(0, 0, size.width(), size.height(), pixes);
 		return buffer;
 	}
+
+	@Override
+	public Optional<Printing> printing() {
+		return Optional.of(this);
+	}
+
+	private PrintListener pl;
+	
+	@Override
+	public void addPrintListener(PrintListener listener) {
+		pl = listener;
+	}
+
+	@Override
+	public void removePrintListener(PrintListener listener) {
+		if( pl == listener) pl = null;
+	}
+
+	@Override
+	public void start() {
+		browser.mainFrame().get().print();		
+	}
+	
+	
 }

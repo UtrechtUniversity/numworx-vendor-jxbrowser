@@ -3,8 +3,11 @@ package nl.numworx.swingbrowser.jxb;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,9 @@ import javax.swing.JComponent;
 
 import com.teamdev.jxbrowser.browser.Browser;
 import com.teamdev.jxbrowser.browser.callback.InjectJsCallback;
+import com.teamdev.jxbrowser.browser.callback.PrintCallback;
+import com.teamdev.jxbrowser.browser.callback.PrintHtmlCallback;
+import com.teamdev.jxbrowser.browser.callback.PrintPdfCallback;
 import com.teamdev.jxbrowser.browser.callback.SavePasswordCallback;
 import com.teamdev.jxbrowser.browser.event.ConsoleMessageReceived;
 import com.teamdev.jxbrowser.browser.event.StatusChanged;
@@ -23,8 +29,15 @@ import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
+import com.teamdev.jxbrowser.navigation.event.LoadFinished;
 import com.teamdev.jxbrowser.navigation.event.NavigationRedirected;
 import com.teamdev.jxbrowser.navigation.event.NavigationStarted;
+import com.teamdev.jxbrowser.print.PdfPrinter;
+import com.teamdev.jxbrowser.print.PdfPrinter.PdfSettings;
+import com.teamdev.jxbrowser.print.PrintJob;
+import com.teamdev.jxbrowser.print.SystemPrinter;
+import com.teamdev.jxbrowser.print.SystemPrinter.HtmlSettings;
+import com.teamdev.jxbrowser.print.event.PrintCompleted;
 import com.teamdev.jxbrowser.ui.Bitmap;
 import com.teamdev.jxbrowser.ui.Size;
 import com.teamdev.jxbrowser.view.swing.BrowserView;
@@ -35,6 +48,7 @@ import nl.numworx.swingbrowser.api.ConsoleEvent.Level;
 import nl.numworx.swingbrowser.api.StatusEvent;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.TitleEvent;
+import nl.numworx.swingbrowser.print.PrintEvent;
 import nl.numworx.swingbrowser.print.PrintListener;
 import nl.numworx.swingbrowser.print.Printing;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
@@ -326,7 +340,43 @@ private String url;
 
 	@Override
 	public void start() {
-		browser.mainFrame().get().print();		
+		browser.set(PrintCallback.class, 
+				(params, tell) -> tell.print()
+		);
+		browser.set(PrintHtmlCallback.class, (params, tell) -> {
+		    PdfPrinter<com.teamdev.jxbrowser.print.PdfPrinter.HtmlSettings> printer = params.printers().pdfPrinter();
+		    PrintJob<com.teamdev.jxbrowser.print.PdfPrinter.HtmlSettings> printJob = printer.printJob();
+		    Path path = Paths.get(new File("printing.pdf").toURI());
+			printJob.settings().pdfFilePath(path).apply();
+		    printJob.on(PrintCompleted.class, event -> {
+		        if (event.isSuccess()) {
+		            info("Printing is completed successfully.");
+		        } else {
+		            warning("Printing has failed.");
+		        }
+		        if (pl != null)
+		        	pl.onPrint(new PrintEvent(this));
+		    });
+		    tell.proceed(printer);
+		});
+//		browser.navigation().on(LoadFinished.class, ev -> 	
+			browser.mainFrame().get().print()
+//		)
+;		
+	}
+
+	private void warning(String string) {
+		if (console != null) {
+			ConsoleEvent ev = new ConsoleEvent(this, Level.WARN, string);
+			console.onConsole(ev);
+		}	
+	}
+
+	private void info(String string) {
+		if (console != null) {
+			ConsoleEvent ev = new ConsoleEvent(this, Level.INFO, string);
+			console.onConsole(ev);
+		}	
 	}
 	
 	

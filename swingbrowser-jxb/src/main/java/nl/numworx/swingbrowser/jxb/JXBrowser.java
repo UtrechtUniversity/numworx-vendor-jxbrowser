@@ -1,6 +1,5 @@
 package nl.numworx.swingbrowser.jxb;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
 import com.teamdev.jxbrowser.cookie.Cookie;
 import com.teamdev.jxbrowser.cookie.CookieStore;
-import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
@@ -35,7 +33,6 @@ import nl.numworx.swingbrowser.api.ConsoleEvent.Level;
 import nl.numworx.swingbrowser.api.StatusEvent;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.TitleEvent;
-import nl.numworx.swingbrowser.print.PrintListener;
 import nl.numworx.swingbrowser.print.Printing;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
 import nl.numworx.swingbrowser.scorm.RefreshListener;
@@ -43,7 +40,7 @@ import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
 import nl.numworx.swingbrowser.scorm.StatusListener;
 import nl.numworx.swingbrowser.scorm.TitleListener;
 
-public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener, Printing {
+public class JXBrowser implements SwingBrowser, Runnable, ConsoleListener {
 
   private static class DisablePassword {
   /**
@@ -309,24 +306,27 @@ private String url;
 
 	@Override
 	public Optional<Printing> printing() {
-		return Optional.of(this);
+		try {
+			return Optional.of(new PrintStub(this));
+		} catch (Throwable e) {
+			warning("Printing: " + e);
+			return Optional.empty();
+		}
 	}
 
-	private PrintListener pl;
-	
-	@Override
-	public void addPrintListener(PrintListener listener) {
-		pl = listener;
+
+	void warning(String string) {
+		if (console != null) {
+			ConsoleEvent ev = new ConsoleEvent(this, Level.WARN, string);
+			console.onConsole(ev);
+		}	
 	}
 
-	@Override
-	public void removePrintListener(PrintListener listener) {
-		if( pl == listener) pl = null;
-	}
-
-	@Override
-	public void start() {
-		browser.mainFrame().get().print();		
+	void info(String string) {
+		if (console != null) {
+			ConsoleEvent ev = new ConsoleEvent(this, Level.INFO, string);
+			console.onConsole(ev);
+		}	
 	}
 	
 	

@@ -1,10 +1,8 @@
 package nl.numworx.swingbrowser.jxb;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.teamdev.jxbrowser.js.JsAccessible;
-import com.teamdev.jxbrowser.js.JsFunction;
 import com.teamdev.jxbrowser.js.JsObject;
 
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;

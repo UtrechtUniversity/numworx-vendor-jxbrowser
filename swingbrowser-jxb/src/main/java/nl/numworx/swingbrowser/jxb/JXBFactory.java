@@ -2,7 +2,6 @@ package nl.numworx.swingbrowser.jxb;
 
 import javax.swing.JComponent;
 
-import com.teamdev.jxbrowser.callback.Callback;
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
 import com.teamdev.jxbrowser.engine.EngineOptions.Builder;
@@ -22,7 +21,6 @@ public class JXBFactory implements SwingBrowserFactory {
 
 
     String licence;
-    //licence = "1BNDIEOFAZ6DJN664NY7LHJTVF4078K5DJSRRCC0EI3307A92ZT53XBL6PK0NA2YDCMDRN";
     licence = System.getProperty("jxbrowser.license.key", JXB.licence);
     String remoteDebuggingPort = System.getProperty("jxbrowser.remote.debugging.port", "-1");
     

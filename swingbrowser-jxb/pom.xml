@@ -41,6 +41,19 @@
   </repositories>
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -58,5 +71,6 @@
 	</build>
 	<properties>
 		<jxb.version>7.28.1</jxb.version>
+		<jxbrowser.license.key>LICENSE_KEY</jxbrowser.license.key>
 	</properties>
 </project>

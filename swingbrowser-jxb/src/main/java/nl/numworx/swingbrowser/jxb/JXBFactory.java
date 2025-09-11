@@ -14,14 +14,15 @@ import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 
 public class JXBFactory implements SwingBrowserFactory {
 
-  static boolean isMac = System.getProperty("os.name").contains("Mac OS X");
+   static final String JXBROWSER_LICENSE_KEY = "jxbrowser.license.key";
+   static boolean isMac = System.getProperty("os.name").contains("Mac OS X");
 	
 	
   public JXBFactory() {
 
 
     String licence;
-    licence = System.getProperty("jxbrowser.license.key", JXB.licence);
+    licence = System.getProperty(JXBROWSER_LICENSE_KEY, JXB.licence);
     String remoteDebuggingPort = System.getProperty("jxbrowser.remote.debugging.port", "-1");
     
     Builder builder = EngineOptions.newBuilder(RenderingMode.OFF_SCREEN);

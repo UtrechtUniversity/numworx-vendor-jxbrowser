@@ -51,11 +51,6 @@
   		<version>1.0.500</version>
   		<scope>test</scope>
   	</dependency>
-  	<dependency>
-  		<groupId>fi.beans</groupId>
-  		<artifactId>numworxlf</artifactId>
-  		<version>2.5.4</version>
-  	</dependency>
   </dependencies>
 	<build>
 		<plugins>

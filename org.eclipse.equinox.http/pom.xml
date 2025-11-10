@@ -6,7 +6,11 @@
 	Igor Fedorenko - initial implementation -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>nl.numworx</groupId>
+  <parent>
+    <groupId>nl.numworx.swingbrowser</groupId>
+    <artifactId>swingbrowser-parent</artifactId>
+    <version>0.0.19-SNAPSHOT</version>
+  </parent>
 	<artifactId>org.eclipse.equinox.http</artifactId>
 	<version>1.0.501-SNAPSHOT</version>
 	<properties>
@@ -74,19 +78,4 @@
 		</dependency>
 	</dependencies>
 	<packaging>bundle</packaging>
-   <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </snapshotRepository>
-        <repository>
-            <id>release</id>
-            <name>libs-release</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
-        </repository>
-    </distributionManagement>
-	<scm>
-		<developerConnection>scm:git:git@git.science.uu.nl:dwoproject/application/org.eclipse.equinox.http.git</developerConnection>
-	</scm>
 </project>

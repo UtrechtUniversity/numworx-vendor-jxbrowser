@@ -77,12 +77,12 @@
             <repository>
               <id>github</id>
               <name>GitHub Packages</name>
-              <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-geogebra</url>
+              <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
             </repository>
         <snapshotRepository> 
           <id>github</id>
           <name>GitHub Packages</name>
-          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-geogebra</url>
+          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
         </snapshotRepository>
     </distributionManagement>
 

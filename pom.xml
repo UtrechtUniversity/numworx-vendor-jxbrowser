@@ -10,6 +10,7 @@
 		<module>swingbrowser-api</module>
 		<!--<module>swingbrowser-jfx</module>-->
 		<module>swingbrowser-jxb</module>
+		<module>org.eclipse.equinox.http</module>
 		<module>swingbrowser-ext</module>
 	</modules>
 	<properties>

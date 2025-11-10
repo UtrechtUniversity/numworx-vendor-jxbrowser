@@ -48,7 +48,7 @@
   	<dependency>
   		<groupId>nl.numworx</groupId>
   		<artifactId>org.eclipse.equinox.http</artifactId>
-  		<version>1.0.500</version>
+  		<version>1.0.501-SNAPSHOT</version>
   		<scope>test</scope>
   	</dependency>
   </dependencies>

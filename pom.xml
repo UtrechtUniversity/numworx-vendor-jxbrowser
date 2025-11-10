@@ -78,4 +78,17 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+    <distributionManagement>
+            <repository>
+              <id>github</id>
+              <name>GitHub Packages</name>
+              <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-geogebra</url>
+            </repository>
+        <snapshotRepository> 
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-geogebra</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

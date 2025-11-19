@@ -30,6 +30,7 @@
                                         <localOnly>true</localOnly>
                                         <allowSnapshots>false</allowSnapshots>
                                         <enableSshAgent>true</enableSshAgent>
+                                        <goals>clean install</goals>
                                 </configuration>
                                <dependencies>
                                         <dependency>

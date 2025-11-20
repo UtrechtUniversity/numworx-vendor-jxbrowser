@@ -1,5 +1,6 @@
 package nl.numworx.swingbrowser.ext;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -26,8 +28,6 @@ import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import fi.beans.numworxlf.Constants;
-import fi.beans.numworxlf.JButton;
 import nl.numworx.swingbrowser.api.SwingBrowser;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.scorm.ConsoleListener;
@@ -139,6 +139,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
         this.service = service;
         this.properties = properties;
 	}
+  	static final Color COLOR10 = new Color(228,242,251); // Module achtergrond
 
 	public void init() {
 		tracker = new ServiceTracker<>(context, HttpService.class, this);
@@ -148,7 +149,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		btn.setEnabled(false);
 		add(btn);
 		setOpaque(true);
-		setBackground(Constants.COLOR10);
+		setBackground(COLOR10);
 		
 	}
 

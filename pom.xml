@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO.master.pom</artifactId>
-		<version>1.1</version>
-	</parent>
 	<groupId>nl.numworx.swingbrowser</groupId>
 	<artifactId>swingbrowser-parent</artifactId>
-	<version>0.0.18</version>
+	<version>0.0.19</version>
 	<packaging>pom</packaging>
 	<name>SwingBrowser Multi module</name>
 	<modules>
 		<module>swingbrowser-api</module>
 		<!--<module>swingbrowser-jfx</module>-->
 		<module>swingbrowser-jxb</module>
+		<module>org.eclipse.equinox.http</module>
 		<module>swingbrowser-ext</module>
 	</modules>
 	<properties>
@@ -34,6 +30,7 @@
                                         <localOnly>true</localOnly>
                                         <allowSnapshots>false</allowSnapshots>
                                         <enableSshAgent>true</enableSshAgent>
+                                        <goals>clean install</goals>
                                 </configuration>
                                <dependencies>
                                         <dependency>
@@ -74,8 +71,21 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-api</artifactId>
-				<version>0.0.18</version>
+				<version>0.0.19</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+    <distributionManagement>
+            <repository>
+              <id>github</id>
+              <name>GitHub Packages</name>
+              <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
+            </repository>
+        <snapshotRepository> 
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

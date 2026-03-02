@@ -69,7 +69,7 @@
 						<Bundle-Activator>nl.numworx.swingbrowser.jxb.Activator</Bundle-Activator>
 						<Export-Package>!*</Export-Package>
 						<Private-Package>nl.numworx.swingbrowser.jxb</Private-Package>
-						<Import-Package>nl.numworx.swingbrowser.api;provide:=true,nl.numworx.swingbrowser.print;provide=true;*</Import-Package>
+						<Import-Package>nl.numworx.swingbrowser.api;provide:=true,nl.numworx.swingbrowser.print;provide:=true;*</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

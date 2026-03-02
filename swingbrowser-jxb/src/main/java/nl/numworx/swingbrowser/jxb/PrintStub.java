@@ -58,7 +58,7 @@ class PrintStub implements Printing {
 			settings.pdfFilePath(path)
 			 .enablePrintingBackgrounds()
 			 .disablePrintingHeaderFooter()
-			 .orientation(Orientation.LANDSCAPE)
+			 .orientation(format.getOrientation() == PageFormat.LANDSCAPE ? Orientation.LANDSCAPE : Orientation.PORTRAIT)
 			 .paperSize(PaperSize.ISO_A4)
 			 .pageMargins(PageMargins.of(18, 18, 18, 18))
 			 .apply();

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>nl.numworx.swingbrowser</groupId>
 		<artifactId>swingbrowser-parent</artifactId>
-		<version>0.0.12-SNAPSHOT</version>
+		<version>0.0.20-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>swingbrowser-jfx</artifactId>
@@ -40,4 +40,20 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+	<profile>
+		<id>java9</id>
+		<activation>
+			<jdk>9,</jdk>
+		</activation>
+		<build>
+			<plugins>
+		  	  <plugin>
+		    	<groupId>org.apache.maven.plugins</groupId>
+		    	<artifactId>maven-toolchains-plugin</artifactId>
+		  	  </plugin>
+			</plugins>
+		</build>
+	</profile>
+	</profiles>
 </project>

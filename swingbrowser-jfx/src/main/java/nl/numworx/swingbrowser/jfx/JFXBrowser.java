@@ -272,12 +272,12 @@ class JFXBrowser extends JFXPanel implements SwingBrowser {
 
   @Override
   public void addConsoleListener(ConsoleListener l) {
-    stub.delegate = null;
+    stub.delegate = l;
   }
 
   @Override
   public void removeConsoleListener(ConsoleListener l) {
-    stub.delegate = l;
+    stub.delegate = null;
   }
 
 }

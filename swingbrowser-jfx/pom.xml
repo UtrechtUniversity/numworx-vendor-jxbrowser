@@ -55,5 +55,24 @@
 			</plugins>
 		</build>
 	</profile>
+	<profile>
+		<id>openjfx11</id>
+		<dependencies>
+		    <dependency>
+		        <groupId>org.openjfx</groupId>
+		        <artifactId>javafx-swing</artifactId>
+		        <version>11</version>
+		    </dependency>
+		    <dependency>
+		        <groupId>org.openjfx</groupId>
+		        <artifactId>javafx-web</artifactId>
+		        <version>11</version>
+		    </dependency>
+		</dependencies>
+    <properties>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+	</properties>
+	</profile>
 	</profiles>
 </project>

@@ -23,7 +23,7 @@ In Maven it is the `jxbrowser.license.key` property.
 
 ### Folder structure
 
-There are 5 folders among them the api and a fork of the org.eclipse.quinox.html bundle implementing the OSGi http service api. 
+There are 5 folders among them the api and a fork of the org.eclipse.equinox.html bundle implementing the OSGi http service api. 
 
 ### File formats 
 

@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.numworx.swingbrowser</groupId>
 	<artifactId>swingbrowser-parent</artifactId>
-	<version>0.0.19</version>
+	<version>0.0.20</version>
 	<packaging>pom</packaging>
 	<name>SwingBrowser Multi module</name>
 	<modules>
 		<module>swingbrowser-api</module>
-		<!--<module>swingbrowser-jfx</module>-->
+		<module>swingbrowser-jfx</module>
 		<module>swingbrowser-jxb</module>
 		<module>org.eclipse.equinox.http</module>
 		<module>swingbrowser-ext</module>
@@ -71,7 +71,7 @@
 			<dependency>
 				<groupId>nl.numworx.swingbrowser</groupId>
 				<artifactId>swingbrowser-api</artifactId>
-				<version>0.0.19</version>
+				<version>0.0.20</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

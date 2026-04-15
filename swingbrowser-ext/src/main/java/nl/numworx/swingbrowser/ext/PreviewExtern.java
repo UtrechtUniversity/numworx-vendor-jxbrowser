@@ -89,6 +89,8 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 	private ServiceRegistration<SwingBrowserFactory> service;
 
 	private Dictionary<String, Object> properties;
+
+	private PreviewServlet preview;
 	
 	void fire(String key, String value) {
 		String old = cmi.put(key, value);
@@ -206,7 +208,7 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		initparams.put("local", "http://127.0.0.1:" + port + getPath(getValue(ACTION_COMMAND_KEY).toString()));
 		HttpContext ctx = createHttpContext();
 		try {
-			service.registerServlet("/", new PreviewServlet(), initparams, ctx);
+			service.registerServlet("/", preview = new PreviewServlet(), initparams, ctx);
 			service.registerServlet("/local", new LocalServlet(this), initparams, ctx);
 			service.registerResources("/local/resources", "nl/numworx/swingbrowser/ext/resources", ctx);
 		} catch (ServletException e) {
@@ -320,4 +322,8 @@ public class PreviewExtern extends JPanel implements ServiceTrackerCustomizer<Ht
 		firePropertyChange(key, old, value);
 	}
 
+	public void newSession() {
+		if (preview != null) 
+			preview.newSession();
+	}
 }

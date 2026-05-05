@@ -9,10 +9,10 @@
   <parent>
     <groupId>nl.numworx.swingbrowser</groupId>
     <artifactId>swingbrowser-parent</artifactId>
-    <version>0.0.21</version>
+    <version>0.0.22-SNAPSHOT</version>
   </parent>
 	<artifactId>org.eclipse.equinox.http</artifactId>
-	<version>1.0.503</version>
+	<version>1.0.504-SNAPSHOT</version>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>

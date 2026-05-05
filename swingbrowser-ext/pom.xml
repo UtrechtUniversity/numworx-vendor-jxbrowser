@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.swingbrowser</groupId>
     <artifactId>swingbrowser-parent</artifactId>
-    <version>0.0.21-SNAPSHOT</version>
+    <version>0.0.21</version>
   </parent>
   <artifactId>swingbrowser-ext</artifactId>
   <properties>
@@ -48,7 +48,7 @@
   	<dependency>
   		<groupId>nl.numworx.swingbrowser</groupId>
   		<artifactId>org.eclipse.equinox.http</artifactId>
-  		<version>1.0.503-SNAPSHOT</version>
+  		<version>1.0.503</version>
   		<scope>test</scope>
   	</dependency>
   </dependencies>

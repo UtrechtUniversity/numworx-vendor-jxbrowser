@@ -15,6 +15,7 @@ public class Activator implements BundleActivator, SwingBrowserFactory {
   private BundleContext context;
   private Hashtable<String, Object> properties = new Hashtable<>();
   private ServiceRegistration<SwingBrowserFactory> service;
+private PreviewExtern preview;
   
   @Override
   public void start(BundleContext context) throws Exception {
@@ -31,7 +32,7 @@ public class Activator implements BundleActivator, SwingBrowserFactory {
 
   @Override
   public SwingBrowser newBrowser() {
-    PreviewExtern preview = new PreviewExtern(context, service, properties);
+    preview = new PreviewExtern(context, service, properties);
     preview.init();
     preview.start();
     return preview;
@@ -39,7 +40,9 @@ public class Activator implements BundleActivator, SwingBrowserFactory {
 
   @Override
   public void newSession() {
-    // nog uitzoeken.    
+    if (preview != null) {
+    	preview.newSession();
+    }
   }
 
 }

@@ -37,7 +37,7 @@ In the numworx authoring environment, the swingbrowser api is used to display th
 
 * The JxBrowser software is licensed as in https://teamdev.com/jxbrowser/individual-license-agreement/
 * The OSGi html service implementation has an [Eclipse Public License Version 1.0](http://www.eclipse.org/legal/epl-v10.html)
-* All others copyright Utrecht University (2025). All rights reserved. 
+* All others are licensed under the GNU General Public License version 3. Copyright Utrecht University (2025). All rights reserved. 
 
 ## Contact 
 

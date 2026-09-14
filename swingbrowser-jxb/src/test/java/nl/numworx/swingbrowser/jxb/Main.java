@@ -18,7 +18,7 @@ public class Main {
     JFrame frame = new JFrame("Swingbrowser");
     frame.setContentPane(browser.asComponent());
     browser.addTitleListener(t -> frame.setTitle(t.getTitle()));
-    browser.loadURL("https://numworx.acc.uu.nl/dwo/saml/login.jsp");
+    browser.loadURL("https://numworx.uu.nl/dwo/saml/login.jsp");
     
     
     frame.setSize(1024, 768);

@@ -79,7 +79,8 @@
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
-		<jxb.version>7.28.1</jxb.version>
+<!-- latest version, 7.35 has issues, 7.36 no license -->
+		<jxb.version>7.34.1</jxb.version>
 		<jxbrowser.license.key>LICENSE_KEY</jxbrowser.license.key>
 	</properties>
 </project>

@@ -2,6 +2,7 @@ package nl.numworx.swingbrowser.jxb;
 
 import javax.swing.JComponent;
 
+import com.teamdev.jxbrowser.VersionInfo;
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
 import com.teamdev.jxbrowser.engine.EngineOptions.Builder;
@@ -29,7 +30,13 @@ public class JXBFactory implements SwingBrowserFactory {
     try {
     	int port = Integer.parseInt(remoteDebuggingPort);
     	if (port > 0)
+    	{
     		builder = builder.remoteDebuggingPort(port);
+    		// >> 7.31
+    		String version = VersionInfo.version();
+    		if (version.compareTo("7.31")>=0)
+    			builder = builder.addSwitch("--remote-allow-origins=http://localhost:"+port);
+    	}
     } catch(Exception nop) {}
 
     if (isMac) {

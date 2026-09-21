@@ -18,6 +18,7 @@ import com.teamdev.jxbrowser.browser.event.StatusChanged;
 import com.teamdev.jxbrowser.browser.event.TitleChanged;
 import com.teamdev.jxbrowser.cookie.Cookie;
 import com.teamdev.jxbrowser.cookie.CookieStore;
+import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.js.ConsoleMessageLevel;
 import com.teamdev.jxbrowser.js.JsObject;
@@ -66,8 +67,14 @@ private String url;
  
   public JXBrowser(JXBFactory jxb) {
     this.jxb = jxb;
-    browser = jxb.engine.newBrowser();
-    store   = jxb.engine.cookieStore();
+    Engine engine = jxb.engine;
+    if (engine.isClosed())
+    {
+    	System.err.println("SHOULD NOT HAPPEN!");
+    	engine = jxb.newEngine();
+    }
+	browser = engine.newBrowser();
+    store   = engine.cookieStore();
     browser.settings().enableTransparentBackground();
     browser.on(TitleChanged.class, this::onTitle);
     browser.on(StatusChanged.class, this::onStatus);

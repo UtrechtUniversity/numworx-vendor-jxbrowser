@@ -45,17 +45,15 @@ public class JXBFactory implements SwingBrowserFactory {
     	;
     }
     
-    EngineOptions options = builder
+    options = builder
         .licenseKey(licence)
         .language(Language.of(JComponent.getDefaultLocale()).orElse(Language.ENGLISH_US)) // Language.of(Locale)
         .build();
-    engine = Engine.newInstance(options);
-	engine.permissions().set(RequestPermissionCallback.class, (params, tell) -> {
-		tell.grant();
-	});
+    newEngine();
   }
   
   Engine engine;
+private final EngineOptions options;
   
   @Override
   public SwingBrowser newBrowser() {
@@ -75,5 +73,13 @@ public class JXBFactory implements SwingBrowserFactory {
   public void newSession() {
     engine.cookieStore().deleteAll();
   }
+
+  public synchronized Engine newEngine() {
+    engine = Engine.newInstance(options);
+	engine.permissions().set(RequestPermissionCallback.class, (params, tell) -> {
+		tell.grant();
+	});
+	return engine;
+}
 
 }
